@@ -2,35 +2,101 @@
 <head>
     <title>priority_dequeue.zig - Zig standard library</title>
     <style>
-        body { color: #777; background-color: #F2F2F2; font-family: monospace; }
-        code { display: block; white-space: pre; }
-        a { font-weight: bold; }
-        h1 { margin-bottom: 5px; }
-        header, footer { background-color: #FFF; }
-        header { border-bottom: 2px solid #f7a41d; margin-bottom: 1em; }
-        footer { border-top: 2px solid #f7a41d; margin-top: 1em; }
-        .comment {
-            color: #222;
-            padding: .8em 0;
+        body {
+            margin: 0;
+            padding: 0;
+            color: #000;
             background-color: #FFF;
-            white-space: pre;
+            font-size: 15px;
+			height: 100%;
         }
-        .pub-fn { color: #700; font-weight: bold; }
-        .pub-const { color: #070; font-weight: bold; }
+        table {
+            border-collapse: collapse;
+			width: 100%;
+			height: 100%;
+        }
+        td.doc {
+            min-width: 450px;
+            max-width: 450px;
+            padding: 10px 20px 1px 30px;
+            overflow-x: hidden;
+            vertical-align: top;
+        }
+        td.code {
+            width: 100%;
+            padding: 14px 15px 16px 25px;
+            vertical-align: top;
+            background: #F5EEE5;
+            border-left: 1px solid #CAC9C4;
+            color: #333;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        h1 { font-size: 1.3em; color: #777; } /* file */
+        h2 { font-size: 1.5em; } /* top-level public item */
+        h3 { /* public struct member */
+			font-size: 1.1em;
+			padding-left: 1em;
+			border-left: 4px solid #CAC9C4;
+		}
     </style>
 </head>
 <body>
-<header>
-    <h1>priority_dequeue.zig - Zig standard library</h1>
 </header>
 
 <table><tbody>
 <tr>
 	<td class="doc">
-		<p>Holy cow!</p>
+        <h1>priority_dequeue.zig</h1>
 	</td>
 	<td class="code">
-		<pre>Yup yup yup!<pre>
+	</td>
+</tr>
+<tr>
+	<td class="doc">
+		<h2>iterateSection()</h2>
+		<p>Asserts that `header` includes "\n[" at the beginning and "]\n" at the end.
+		`header` must remain valid for the lifetime of the iterator.</p>
+	</td>
+	<td class="code">
+pub fn iterateSection(ini: Ini, header: []const u8) SectionIterator {
+    assert(mem.startsWith(u8, header, "\n["));
+    assert(mem.endsWith(u8, header, "]\n"));
+    const first_header = header[1..];
+    const next_index = if (mem.indexOf(u8, ini.bytes, first_header)) |i|
+        i + first_header.len
+    else
+        null;
+    return .{
+        .ini = ini,
+        .next_index = next_index,
+        .header = header,
+    };
+}
+	</td>
+</tr>
+<tr>
+	<td class="doc">
+		<h2>thing()</h2>
+		<p>Thing that does a thing. This one shows a struct member.</p>
+	</td>
+	<td class="code">
+pub fn thing(ini: Ini, header: []const u8) SectionIterator {
+    return struct {
+
+	</td>
+</tr>
+<tr>
+	<td class="doc">
+		<h3>honk()</h3>
+		<p>This is the honk method under the thing struct, so we style it
+           a little different to make it easier to spot.</p>
+	</td>
+	<td class="code">
+		pub fn honk();
+
+    };
+}
 	</td>
 </tr>
 </tbody></table>
