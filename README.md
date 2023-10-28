@@ -11,7 +11,7 @@ To make it browseable, `@import()` calls get converted to hyperlinks.
 
 <a href="http://ratfactor.com/zig/stdlib-browseable2/std.zig.html">See it live here!</a>
 
-![screenshot of example output](http://ratfactor.com/zig/stdlib-browseable/screenshot.png)
+![screenshot of example output](http://ratfactor.com/zig/stdlib-browseable2/zstd_before_after.png)
 
 
 ## Run it!
