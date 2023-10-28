@@ -19,6 +19,10 @@ td.doc {
     overflow-x: hidden;
     vertical-align: top;
 }
+#footer {
+    text-align: center;
+    padding: 2em 0;
+}
 td.code {
     width: 100%;
     padding: 14px 15px 16px 25px;
