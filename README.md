@@ -31,12 +31,6 @@ The second parameter _can_ be a wildcard match of files/directories to generate:
     priority_queue.zig
     priority_dequeue.zig
 
-    dwarf.zig
-    target.zig
-    crypto/blake2.zig
-    crypto/aes_ocb.zig
-    ...
-
 Output will be generated in a new directory named `output/` in the current
 working directory.
 
