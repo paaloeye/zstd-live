@@ -16,11 +16,10 @@ puts <<HTML
     <link rel="stylesheet" href="#{root_rel_link}styles.css">
 </head>
 <body>
-</header>
-
 <table><tbody>
 <tr><td class="doc">
 <h1>
+  <a href="index.html"><img src="#{root_rel_link}zig-stdlib-book.svg" alt="" width="60"> Home</a> /
   <a href="#{root_rel_link}std.zig.html">std</a> /
   #{fname_rel}
 </h1>

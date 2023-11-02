@@ -3,6 +3,7 @@
 This is a little Ruby program that creates a browseable HTML mini-site from
 the Zig standard library source.
 
+<img src="raw/zig-stdlib-book.svg" alt="" style="float: right; margin: 1em;">
 
 The style was inspired by (as in, nearly identical to)
 <a href="https://web.archive.org/web/20120428101624/http://jashkenas.github.com/docco/">docco.coffee</a> (archive.org).
