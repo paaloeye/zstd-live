@@ -3,6 +3,7 @@
 This is a little Ruby program that creates a browseable HTML mini-site from
 the Zig standard library source.
 
+<img src="raw/zig-stdlib-book.svg" alt="" style="float: right; margin: 1em;">
 
 The style was inspired by (as in, nearly identical to)
 <a href="https://web.archive.org/web/20120428101624/http://jashkenas.github.com/docco/">docco.coffee</a> (archive.org).
@@ -32,5 +33,7 @@ The second parameter _can_ be a wildcard match of files/directories to generate:
 Output will be generated in a new directory named `output/` in the current
 working directory.
 
-TODO: I don't need Bash here. Ruby can do all of this. I just used it because
-I'd already written it for the previous version of this program.
+## TODOs
+
+* I don't need Bash here. Ruby can do all of this. I was just re-using script.
+* Make an index page with big "browse" link at top followed by semi-automated, categorized file tree

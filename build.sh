@@ -20,8 +20,13 @@ set -e
 lib_dir=$1
 matchy=$2
 
-# copy stylesheet first
+# make output dir if it doesn't exist
+mkdir -p output
+
+# copy static files first
 cp styles.css output/
+cp index.html output/
+cp zig-stdlib-book.svg output/
 
 for file in $(find $lib_dir -name '*.zig')
 do

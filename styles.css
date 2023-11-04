@@ -39,6 +39,7 @@ h1 { /* filename */
 }
 h2 { /* top-level public item */
     font-size: 1.5em;
+    margin-top: 0;
 }
 .method h2 { /* struct method */
     font-size: 1.1em;

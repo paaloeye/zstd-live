@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Browseable Zig Standard Library</title>
+    <meta property="og:title" content="The Browseable Zig Standard Library" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://ratfactor.com/zig/stdlib-browseable2/" />
+    <meta property="og:image" content="http://ratfactor.com/zig/stdlib-browseable2/zig-stdlib-book.svg" />
+    <style>
+        header { text-align: center; }
+        h1 { color: #777; }
+        h2 { color: #864; margin: 0; border-bottom: 1px solid #864; }
+/*        section { border: 2px solid tan; max-width: 400px; float: left; margin: 1em; padding: 1em; } */
+        a { font-size: 1.2em; background-color: #f1f1ff; }
+        a.normal-link { font-size: initial; background-color: transparent; }
+        code { background-color: #fff0d0; }
+        ul { margin: 0; }
+        /* Multi-column layout */
+        .container {
+            border-top: 2px solid #777;
+            column-width: 25em;
+            padding-top: 1em;
+        }
+        section {
+            border: 2px solid tan;
+            padding: 1em;
+            break-inside: avoid;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img src="zig-stdlib-book.svg" alt="vector drawing of a book with zig logo">
+    <h1>The Zig Standard Library</h1>
+</header>
+
+<div class="container">
+
+<section>
+    <p>This page contains a human-curated directory for the Zig standard
+    library.  All *.zig links point to HTML documents which have been
+    automatically generated from the library source.</p>
+    <p>The files are split into two columns: The right column is the raw Zig
+    source code in the file.  The left column will contain public identifiers
+    and any document comments to explain them.</p>
+</section>
+
+<section>
+    <h2>Data structures</h2>
+
+    <p>
+        <a href="array_list.zig.html">array_list.zig</a>
+        Probably the most commonly used data structure in Zig. This is a
+        resizeable list. Contains a huge number of handy methods for
+        manipulating a list.
+        See <a class="normal-link" href="https://ziglearn.org/chapter-2/#arraylist">Standard Patterns: ArrayList</a>
+        (ziglearn.org).
+    </p>
+    <p>
+      <a href="bounded_array.zig.html">bounded_array.zig</a>
+      For fixed-size lists. Compare with ArrayList.
+    </p>
+    <p>
+      <a href="multi_array_list.zig.html">multi_array_list.zig</a>
+      A list of structs, but stores the fields of the structs efficiently as
+      contiguous lists. See
+      <a class="normal-link" href="https://zig.news/kristoff/struct-of-arrays-soa-in-zig-easy-in-userland-40m0">Struct of Arrays (SoA) in Zig? Easy &amp; in Userland!</a>
+      (zig.news).
+    </p>
+    <p>
+        <a href="array_hash_map.zig.html">array_hash_map.zig</a>
+        A "hash" or "dictionary" storing values by hashed key.
+        For typical needs, consider <code>StringHashMap</code>
+        or <code>AutoHashMap</code>.
+        See <a class="normal-link" href="https://devlog.hexops.com/2022/zig-hashmaps-explained/">Zig hashmaps explained</a> (hexops.com).
+        <br>
+        <a href="buf_map.zig.html">buf_map.zig</a>
+        A StringHashMap that copies and frees keys and values for you!
+        <br>
+        <a href="buf_set.zig.html">buf_set.zig</a>
+        A StringHashMap that works as a set of strings.
+        <br>
+        <a href="comptime_string_map.zig.html">comptime_string_map.zig</a>
+        Basically a StringHashMap that hashes at comptime!
+    </p>
+    <p>
+      <a href="enums.zig.html">enums.zig</a>
+      Functions for working with Zig's <code>enum</code>s.
+    </p>
+    <p>
+      <a href="fifo.zig.html">fifo.zig</a>
+      and
+      <a href="priority_dequeue.zig.html">priority_dequeue.zig</a>
+      and
+      <a href="priority_queue.zig.html">priority_queue.zig</a>
+      General-purpose queue structures with handy methods.
+    </p>
+    <p>
+        <a href="BitStack.zig.html">BitStack.zig</a>
+        An <code>ArrayList</code> of bits with stack methods like
+        <code>push()</code> and <code>pop()</code>. See
+    </p>
+    <p>
+        <a href="RingBuffer.zig.html">RingBuffer.zig</a>
+        A circular buffer with a backing slice with read/write
+        and slicing operations.
+    </p>
+    <p>
+      <a href="linked_list.zig.html">linked_list.zig</a>
+      Contains <code>SinglyLinkedList()</code> and
+      <code>DoublyLinkedList()</code> linked list types.
+    </p>
+    <p>
+      <a href="treap.zig.html">treap.zig</a>
+      A <a class="normal-link" href="https://en.wikipedia.org/wiki/Treap">treap</a>
+      (wikipedia.org) binary search tree.
+    </p>
+    <p>
+      <a href="packed_int_array.zig.html">packed_int_array.zig</a>
+      Read and write integers packed into memory like sardines.
+    </p>
+    <p>
+      <a href="bit_set.zig.html">bit_set.zig</a>
+      Bit sets let you manipulate the individual bits of your bytes. This file
+      contains multiple bit set types and has good descriptions of each.
+    </p>
+    <p>
+      <b>See also:</b> <code>atomic.zig</code> under Parallel and concurrent execution.
+    </p>
+</section>
+
+<section>
+    <h2>Zig-specific</h2>
+
+    <p>
+      <a href="std.zig.html">std.zig</a>
+      The starting point for the whole standard library. This is what
+      gets included when you do <code>const std = @import("std");</code>.
+      Imports the rest of the namespace. You can start here to browse
+      most of the library in this HTML version.
+    </p>
+    <p>
+      <a href="zig.zig.html">zig.zig</a>
+      Zig code tokenzing, parsing, abstract syntax tree, etc.
+      <i>Zig in Zig so you can Zig while you Zig.</i>
+    </p>
+    <p>
+      <a href="meta.zig.html">meta.zig</a>
+      Comptime introspection for Zig data types. (Get the fields from
+      a struct, for example).
+    </p>
+    <p>
+      <a href="testing.zig.html">testing.zig</a>
+      A bunch of helpful functions (and even an allocator that fails
+      on purpose) for your <code>test</code> blocks.
+    </p>
+    <p>
+      <a href="debug.zig.html">debug.zig</a>
+      Contains helpful functions such as
+      <code>std.debug.print()</code>,
+      <code>assert()</code>, <code>panic()</code>, and
+      <code>dumpCurrentStackTrace()</code>.
+    </p>
+    <p>
+      <a href="Build.zig.html">Build.zig</a>
+      Zig's build API provides functionality to
+      perform just about any compilation or file manipulation tasks you
+      might need to build a project. (You typically call its features from
+      a <code>build.zig</code> file.)
+    </p>
+    <p>
+      <a href="builtin.zig.html">builtin.zig</a>
+      All sorts of meta Zig stuff. Contains types returned by the
+      builtin functions (<code>@foo()</code>).
+    </p>
+</section>
+
+<section>
+    <h2>Memory and allocation</h2>
+
+    <p>
+      <a href="mem.zig.html">mem.zig</a>
+      Contains lots of functions for manipulating memory such as
+      <code>sort()</code>,
+      <code>eql()</code>,
+      <code>indexOfDiff()</code>,
+      <code>sliceTo()</code>,
+      <code>len()</code>,
+      <code>trim()</code>,
+      <code>indexOf()</code>,
+      <code>indexOfAny()</code>,
+      <code>indexOfNone()</code>,
+      <code>readIntNative()</code>,
+      <code>writeIntNative()</code>,
+      <code>tokenizeSequence()</code>,
+      <code>splitSequence()</code>,
+      <code>SplitIterator()</code>,
+      <code>alignInSlice()</code>,
+      and many more.
+    </p>
+    <p>
+      <a href="mem/Allocator.zig.html">mem/Allocator.zig</a>
+      Contains the interface used by all memory allocation features in
+      the Zig standard library.
+    </p>
+    <p>
+      <a href="heap.zig.html">heap.zig</a>
+      Defines many allocation strategies for managing memory
+      including
+      <a href="heap/general_purpose_allocator.zig.html">heap/general_purpose_allocator.zig</a>,
+      <a href="heap/PageAllocator.zig.html">heap/PageAllocator.zig</a>,
+      <a href="heap/arena_allocator.zig.html">heap/arena_allocator.zig</a>,
+      and
+      <a href="heap/memory_pool.zig.html">heap/memory_pool.zig</a>.
+    </p>
+    See
+      <ul>
+        <li><a class="normal-link" href="https://ziglearn.org/chapter-2/">Allocators</a>
+            (ziglearn.org)</li>
+        <li><a class="normal-link" href="https://www.openmymind.net/learning_zig/heap_memory/">Heap Memory and Allocators</a>
+            (openmymind.net)</li>
+        <li><a class="normal-link" href="https://www.huy.rocks/everyday/01-05-2022-zig-where-data-is-stored-and-how-to-choose-an-allocator">Where data is stored and how to choose an allocator</a>
+            (huy.rocks)</li>
+      </ul>
+</section>
+
+<section>
+    <h2>General utilities</h2>
+
+    <p>
+      <a href="fmt.zig.html">fmt.zig</a>
+      String formatting (this is how <code>print()</code> works), number
+      parsing, etc.
+      <b>TODO:</b> I need to make a "zig fmt by example" page.
+    </p>
+    <p>
+      <a href="io.zig.html">io.zig</a>
+      Input/Output support for reading and writing data.
+      Includes
+      <a href="io/Reader.zig.html">io/Reader.zig</a>,
+      <a href="io/writer.zig.html">io/writer.zig</a>,
+      <a href="io/bit_reader.zig.html">io/bit_reader.zig</a>,
+      <a href="io/bit_writer.zig.html">io/bit_writer.zig</a>,
+      <a href="io/buffered_reader.zig.html">io/buffered_reader.zig</a>,
+      <a href="io/buffered_writer.zig.html">io/buffered_writer.zig</a>,
+      and
+      <a href="io/tty.zig.html">io/tty.zig</a>.
+    </p>
+    <p>
+      <a href="log.zig.html">log.zig</a>
+      Standardized logging with support for levels (<code>err</code>,
+      <code>warn</code>, <code>info</code>, <code>debug</code>).
+    </p>
+    <p>
+      <a href="Progress.zig.html">Progress.zig</a>
+      Terminal progress indicator (uses ANSI escape sequences when possible).
+    </p>
+    <p>
+      <a href="sort.zig.html">sort.zig</a>
+      Sorting and searching algorithms such as
+      <code>insertion()</code>,
+      <code>heap()</code>,
+      <code>binarySearch()</code>,
+      <code>min()</code>,
+      and
+      <code>max()</code>.
+    </p>
+    <p>
+      <a href="json.zig.html">json.zig</a>
+      Read and write data to and from the JSON serialization format.
+    </p>
+    <p>
+        <a href="Ini.zig.html">Ini.zig</a>
+        Read INI (<code>*.ini</code>) formatted configuration files.
+    </p>
+    <p>
+      <a href="tar.zig.html">tar.zig</a>
+      Support for the
+      <a class="normal-link" href="https://en.wikipedia.org/wiki/Tar_(computing)">Tar</a>
+      (wikipedia.org) archive file format.
+    </p>
+    <p>
+      <a href="crypto.zig.html">crypto.zig</a>
+      A huge number of cryptographic functions.
+      <br>
+      <b>Hashes</b>: <a href="crypto/md5.zig.html">crypto/md5.zig</a>,
+      <a href="crypto/sha1.zig.html">crypto/sha1.zig</a>,
+      <a href="crypto/sha2.zig.html">crypto/sha2.zig</a>,
+      <a href="crypto/sha3.zig.html">crypto/sha3.zig</a>,
+      <a href="crypto/bcrypt.zig.html">crypto/bcrypt.zig</a>,
+      <a href="crypto/scrypt.zig.html">crypto/scrypt.zig</a>,
+      and more.
+      <br>
+      <b>Cryptography</b>:
+      <a href="crypto/25519/curve25519.zig.html">crypto/25519/curve25519.zig</a>,
+      <a href="crypto/25519/ed25519.zig.html">crypto/25519/ed25519.zig</a>,
+      <a href="crypto/aes.zig.html">crypto/aes.zig</a>,
+      and more.
+      <br>
+        <b>See also:</b> <code>crypto/tls.zig</code> and <code>crypto/Certificate.zig</code>
+      under Networking.
+    </p>
+    <p>
+      <a href="hash.zig.html">hash.zig</a>
+      More general hashing algorithms.
+    </p>
+    <p>
+      <a href="rand.zig.html">rand.zig</a>
+      Fast and/or cryptographically secure pseudo-random number generators.
+    </p>
+    <p>
+      <a href="leb128.zig.html">leb128.zig</a>
+      Read and write
+      <a class="normal-link" href="https://en.wikipedia.org/wiki/LEB128">LEB128</a>
+      (wikipedia.org) Little Endian Base 128 numbers.
+    </p>
+    <p>
+        <a href="SemanticVersion.zig.html">SemanticVersion.zig</a>
+        Read (parse), write, and sort semantic version numbers.
+    </p>
+    <p>
+      <a href="unicode.zig.html">unicode.zig</a>
+      Functions for handling encoded Unicode sequences:
+      <code>utf8Encode()</code>,
+      <code>utf8Decode()</code>,
+      <code>utf8ValidateSlice()</code>,
+      <code>utf16leToUtf8Alloc()</code>,
+      etc.
+    </p>
+    <p>
+      <a href="ascii.zig.html">ascii.zig</a>
+      Handy functions for testing <code>u8</code> values as 7-bit ASCII
+      characters (<code>isAlphabetic()</code>, <code>toUpper()</code>, etc.
+    </p>
+    <p>
+      <a href="base64.zig.html">base64.zig</a>
+      Encode and decode
+      <a class="normal-link" href="https://en.wikipedia.org/wiki/Base64">Base64</a>
+      (wikipedia.org) data.
+    </p>
+    <p>
+      <a href="c.zig.html">c.zig</a>
+      Utilities for interoperating with C code. Also contains a lot of
+      OS and architecture-specific function implementations.
+      (See a partial list under OS.)
+    </p>
+    <p>
+      <a href="time/epoch.zig.html">time/epoch.zig</a>
+      Important dates for common OSs and some simple date calculations.
+    </p>
+    <p>
+      <a href="tz.zig.html">tz.zig</a>
+      Handle Earth timezone files.
+    </p>
+    <p>
+      <a href="compress.zig.html">compress.zig</a>
+      Contains a large number of compression/decompression algorithms such
+      as
+      <a href="compress/gzip.zig.html">compress/gzip.zig</a>,
+      <a href="compress/xz.zig.html">compress/xz.zig</a>,
+      <a href="compress/zlib.zig.html">compress/zlib.zig</a>, and more!
+    </p>
+    <p>
+      <a href="math.zig.html">math.zig</a>
+      General mathematical operations.
+    </p>
+    <p>
+      <a href="simd.zig.html">simd.zig</a>
+      Functions for working with SIMD (Single Instruction; Multiple Data),
+      if hardware support is present.
+    </p>
+    <p>
+      <a href="valgrind.zig.html">valgrind.zig</a>
+      Support for working with the
+      <a class="normal-link" href="https://en.wikipedia.org/wiki/Valgrind">Valgrind</a>
+      memory leak detection and profiling tool.
+    </p>
+</section>
+
+<section>
+    <h2>OS and architecture-specific</h2>
+
+    <p>
+      <a href="os.zig.html">os.zig</a>
+      Wrappers for a very large list of OS-specific functions. Includes
+      Unix-like, Emscripten, WASI, Plan9, UEFI, and Windows.
+    </p>
+    <p>
+      <a href="target.zig.html">target.zig</a>
+      Functionality for building Zig programs for a big list of
+      processor architectures.
+    </p>
+    <p>
+      <a href="process.zig.html">process.zig</a>
+      Environment information, etc. for processes (e.g. current working
+      directory and environment variables).
+    </p>
+    <p>
+      <a href="time.zig.html">time.zig</a>
+      Get time, measure time, and sleep.
+    </p>
+    <p>
+      <a href="start.zig.html">start.zig</a>
+      The <code>start()</code> function for executable files. Handles
+      OS-specific startup tasks.
+    </p>
+    <p>
+      <a href="elf.zig.html">elf.zig</a>
+      Support for the
+      <a class="normal-link" href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF</a>
+      (wikipedia.org) executable format.
+    </p>
+    <p>
+      <a href="coff.zig.html">coff.zig</a>
+      Support for the
+      <a class="normal-link" href="https://en.wikipedia.org/wiki/COFF">COFF</a>
+      (wikipedia.org) executable format.
+    </p>
+    <p>
+      <a href="macho.zig.html">macho.zig</a>
+      Support for the
+      <a class="normal-link" href="https://en.wikipedia.org/wiki/Mach-O">Mach-O</a>
+      (wikipedia.org) executable format.
+    </p>
+    <p>
+      <a href="dwarf.zig.html">dwarf.zig</a>
+      Support for the
+      <a class="normal-link" href="https://en.wikipedia.org/wiki/DWARF">DWARF</a>
+      (wikipedia.org) debugging data format.
+    </p>
+    <p>
+      <a href="pdb.zig.html">pdb.zig</a>
+      Support for the
+      <a class="normal-link" href="https://en.wikipedia.org/wiki/Program_database">PDB</a>
+      (wikipedia.org) debugging data format.
+    </p>
+    <p>
+      <a href="wasm.zig.html">wasm.zig</a>
+      WASM opcode list and functions.
+    </p>
+    <p>
+      <a href="Thread.zig.html">Thread.zig</a>
+      Native operating system thread support.
+    </p>
+    <p>
+      <a href="child_process.zig.html">child_process.zig</a>
+      Native child process spawning support.
+    </p>
+    <p>
+      <a href="dynamic_library.zig.html">dynamic_library.zig</a>
+      Utilities for working with dynamic libraries (.dll, .so, etc.)
+    </p>
+    <p>
+      <a href="fs.zig.html">fs.zig</a>
+      File system support.
+      Contains
+      <a href="fs/file.zig.html">fs/file.zig</a>,
+      <a href="fs/path.zig.html">fs/path.zig</a>,
+      <a href="fs/wasi.zig.html">fs/wasi.zig</a>,
+      and
+      <a href="fs/watch.zig.html">fs/watch.zig</a>.
+    </p>
+    <p>
+      <b>See also:</b> the C-code files such as 
+      <a href="c/linux.zig.html">c/linux.zig</a>,
+      <a href="c/openbsd.zig.html">c/openbsd.zig</a>,
+      <a href="c/freebsd.zig.html">c/freebsd.zig</a>,
+      <a href="c/netbsd.zig.html">c/netbsd.zig</a>,
+      <a href="c/darwin.zig.html">c/darwin.zig</a>,
+      <a href="c/wasi.zig.html">c/wasi.zig</a>,
+      <a href="c/windows.zig.html">c/windows.zig</a>,
+      etc.
+</section>
+
+<section>
+    <h2>Parallel and concurrent execution</h2>
+
+    <p>
+      <a href="atomic.zig.html">atomic.zig</a> Support for atomic access to
+      shared memory. See specific data structures in 
+      <a href="atomic/queue.zig.html">atomic/queue.zig</a>
+      and
+      <a href="atomic/stack.zig.html">atomic/stack.zig</a>.
+    </p>
+    <p>
+      <a href="once.zig.html">once.zig</a>
+      Executes a function just once.
+    </p>
+    <p>
+      <a href="event.zig.html">event.zig</a>
+      Support for various types of event-based programming.
+      <br>
+      Examples:
+      <a href="event/batch.zig.html">event/batch.zig</a>,
+      <a href="event/future.zig.html">event/future.zig</a>,
+      and
+      <a href="event/loop.zig.html">event/loop.zig</a>.
+    </p>
+    <p>
+      <b>See also:</b> <code>Thread.zig</code> and
+      <code>child_process.zig</code> under OS.
+    </p>
+</section>
+
+<section>
+    <h2>Networking</h2>
+
+    <p>
+      <a href="net.zig.html">net.zig</a>
+      Networking functions for TCP/IP, Unix Sockets, DNS, etc.
+    </p>
+    <p>
+        <a href="Uri.zig.html">Uri.zig</a><br>
+        Read and write (parse) URIs (see the tests in this one!).
+    </p>
+    <p>
+      <a href="crypto/tls.zig.html">crypto/tls.zig</a> and
+      <a href="crypto/Certificate.zig.html">crypto/Certificate.zig</a>
+      for cryptographic networking.
+    </p>
+    <p>
+      <a href="http.zig.html">http.zig</a>
+      HTTP support! Includes
+      <a href="http/Client.zig.html">http/Client.zig</a>,
+      <a href="http/Headers.zig.html">http/Headers.zig</a>,
+      and
+      <a href="http/Server.zig.html">http/Server.zig</a>.
+    </p>
+</section>
+
+</div> <!-- end .container -->
+
+<footer>
+    This page is the entry point for the Zig Standard Library
+    source viewing utility,
+    <a href="http://ratfactor.com/repos/zstd-browse2/">zstd-browse2</a>.
+</footer>
+</body>
+</html>
