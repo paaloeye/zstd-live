@@ -19,28 +19,10 @@ puts <<HTML
 <table><tbody>
 <tr><td class="doc">
 <h1>
-  <a href="index.html"><img src="#{root_rel_link}zig-stdlib-book.svg" alt="" width="60"> Home</a> /
-  <a href="#{root_rel_link}std.zig.html">std</a> /
+  <a href="index.html"><img src="#{root_rel_link}zig-stdlib-book.svg" alt="" width="60"> zig/lib/std</a> /
   #{fname_rel}
 </h1>
 HTML
-
-# Print a greeting on the entry file. Greeting gets its own row.
-if fname_rel == 'std.zig'
-  puts <<HTML
-<p>What you're looking at is a file called <code>std.zig</code>. It's the entry
-point of the Zig Standard library, which imports and gives names to the rest of
-the library.</p>
-<p>Everything in the right column is the Zig source code in the file. And what you
-see in this left column (hello!) will be public identifiers and any document comments.</p>
-<p>There aren't a lot of comments in <em>this</em> file yet, but there are a
-lot of links you can click on. If you're not sure where to start, try the
-<code>array_list.zig</code> link under the name "ArrayList". That one has some
-comments. Some other files I tend to look at a lot are <code>fmt.zig</code>
-and <code>mem.zig</code></p>
-</td><td class="code"></td></tr><tr><td class="doc">
-HTML
-end
 
 # used to collect documentation comments, line-by-line
 doc_comment = nil
