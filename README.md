@@ -9,9 +9,7 @@ The style was inspired by (as in, nearly identical to)
 
 To make it browseable, `@import()` calls get converted to hyperlinks.
 
-<a href="http://ratfactor.com/zig/stdlib-browseable2/std.zig.html">See it live here!</a>
-
-![screenshot of example output](http://ratfactor.com/zig/stdlib-browseable2/zstd_before_after.png)
+<a href="http://ratfactor.com/zig/stdlib-browseable2/">See it live here!</a>
 
 
 ## Run it!
