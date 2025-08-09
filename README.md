@@ -10,7 +10,9 @@
 
 ## Overview
 
-zstd-live generates beautiful, live HTML documentation from Zig standard library source code. It features a two-column layout inspired by docco.coffee, with documentation and public identifiers on the left and syntax-highlighted source code on the right.
+zstd-live generates beautiful, live HTML documentation from Zig standard library source code.
+It features a two-column layout inspired by docco.coffee, with documentation and public identifiers on the
+left and syntax-highlighted source code on the right.
 
 ### Key Features
 
@@ -96,8 +98,8 @@ make dev
 
 ```
 src/
-├── main.zig              # CLI entry point
-├── generator.zig         # Documentation generator
+├── main.zig             # CLI entry point
+├── generator.zig        # Documentation generator
 ├── parser.zig           # Zig source parser
 ├── template.zig         # HTML template system
 ├── version_manager.zig  # Multi-version support
@@ -167,7 +169,7 @@ make generate
 We welcome contributions! Please see our contributing guidelines:
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Create a feature branch (`git checkout -b feat/amazing-feature`)
 3. Make your changes and add tests
 4. Ensure code is formatted (`make format`)
 5. Run tests (`make test`)
