@@ -24,14 +24,27 @@ node_modules
 *.sln
 *.sw?
 
-# Zig
-.zig-cache
-zig-out
+# Zig build artifacts
+.zig-cache/
+zig-out/
+zig-cache/
+
+# Generated documentation
+dist/
+output/
 
 # AI
 .claude
 
+# Cache and development files
 .tmp
 .output
 .cache
 .build
+
+# Downloaded Zig sources cache
+~/.local/share/zstd-live/
+
+# Temporary build files
+*.tmp
+.backup

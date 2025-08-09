@@ -1,0 +1,53 @@
+name = "zstd-live"
+compatibility_date = "2024-01-01"
+
+[env.production]
+route = { pattern = "stroem.me/p/zstd/live", zone_name = "stroem.me" }
+
+[env.preview]
+# Preview deployments will use the default pages.dev domain
+
+# Cloudflare Pages configuration
+[pages]
+build_command = "make generate"
+build_output_directory = "dist"
+
+# Custom headers for optimal performance
+[[pages.headers]]
+for = "/*.html"
+[pages.headers.values]
+"Cache-Control" = "public, max-age=3600, s-maxage=86400"
+"X-Content-Type-Options" = "nosniff"
+"X-Frame-Options" = "DENY"
+"X-XSS-Protection" = "1; mode=block"
+
+[[pages.headers]]
+for = "/*.css"
+[pages.headers.values]
+"Cache-Control" = "public, max-age=31536000, immutable"
+
+[[pages.headers]]
+for = "/*.js"
+[pages.headers.values]
+"Cache-Control" = "public, max-age=31536000, immutable"
+
+[[pages.headers]]
+for = "/*.svg"
+[pages.headers.values]
+"Cache-Control" = "public, max-age=31536000, immutable"
+
+# Redirect rules
+[[pages.redirects]]
+from = "/"
+to = "/index.html"
+status = 200
+
+[[pages.redirects]]
+from = "/latest/*"
+to = "/0.15.0-master/:splat"
+status = 302
+
+[[pages.redirects]]
+from = "/stable/*"
+to = "/0.14.1/:splat"
+status = 302

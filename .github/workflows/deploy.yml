@@ -1,0 +1,50 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # Regenerate docs daily at 02:00 UTC to catch new Zig changes
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Zig
+      uses: goto-bus-stop/setup-zig@v2
+      with:
+        version: '0.14.0'
+
+    - name: Cache Zig stdlib sources
+      uses: actions/cache@v4
+      with:
+        path: ~/.local/share/zstd-live/sources
+        key: zig-stdlib-${{ hashFiles('src/config.zig') }}
+        restore-keys: |
+          zig-stdlib-
+
+    - name: Build application
+      run: zig build -Doptimize=ReleaseFast
+
+    - name: Update Zig stdlib sources
+      run: ./zig-out/bin/zstd-live update
+
+    - name: Generate documentation
+      run: ./zig-out/bin/zstd-live generate --all-versions --output dist
+
+    - name: Deploy to Cloudflare Pages
+      uses: cloudflare/pages-action@v1
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        projectName: zstd-live
+        directory: dist
+        gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+        wranglerVersion: '3'

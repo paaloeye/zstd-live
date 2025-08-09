@@ -1,0 +1,9 @@
+# Cloudflare Pages redirects file
+# Redirect shortcuts to specific versions
+
+/latest/*      /0.15.0-master/:splat   302
+/stable/*      /0.14.1/:splat         302
+/v0.14/*       /0.14.0/:splat         302
+
+# SPA fallback for any missing files
+/*             /index.html            200
