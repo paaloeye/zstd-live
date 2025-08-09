@@ -208,7 +208,7 @@ The Zig parser recognises and processes these language constructs:
 
 ### Deployment & Hosting
 - **CI/CD**: GitHub Actions handle build, test, and deployment pipeline
-- **Hosting**: Cloudflare Pages with custom domain (`stroem.me/p/zstd/live`)
+- **Hosting**: Cloudflare Pages (`zstd-live.pages.dev`)
 - **Configuration**: `wrangler.toml` configures Cloudflare Pages deployment
 - **Redirects**: `_redirects` file provides `/latest/*` and `/stable/*` shortcuts
 - **Caching**: Optimised cache headers for HTML (1h), static assets (1y)

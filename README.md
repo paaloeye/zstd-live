@@ -152,7 +152,7 @@ The project is configured for automatic deployment to Cloudflare Pages:
 
 1. **Automatic Deployment**: Pushes to `main` branch trigger deployment
 2. **Daily Updates**: Scheduled rebuilds to catch new Zig changes
-3. **Custom Domain**: Served at `stroem.me/p/zstd/live`
+3. **Default Domain**: Served at `zstd-live.pages.dev`
 4. **Performance**: Optimised caching and compression
 
 ### Manual Deployment
