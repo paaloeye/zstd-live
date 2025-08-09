@@ -213,18 +213,23 @@ pub const Generator = struct {
 
         try self.file_utils.ensureDir(assets_dir);
 
-        // Copy CSS file
-        if (self.file_utils.pathExists("assets/styles.css")) {
-            const css_dest = try std.fs.path.join(self.allocator, &.{ assets_dir, "styles.css" });
-            defer self.allocator.free(css_dest);
-            try self.file_utils.copyFile("assets/styles.css", css_dest);
-        }
+        const assets = comptime [_][]const u8{
+            "styles.css",
+            "robots.txt",
+            "zig-stdlib-book.svg",
+            "google7f34a2877a817c63.html",
+        };
 
-        // Copy SVG file
-        if (self.file_utils.pathExists("assets/zig-stdlib-book.svg")) {
-            const svg_dest = try std.fs.path.join(self.allocator, &.{ assets_dir, "zig-stdlib-book.svg" });
-            defer self.allocator.free(svg_dest);
-            try self.file_utils.copyFile("assets/zig-stdlib-book.svg", svg_dest);
+        inline for (assets) |asset| {
+            const asset_src = try std.fs.path.join(self.allocator, &.{ "assets", asset });
+            defer self.allocator.free(asset_src);
+
+            if (self.file_utils.pathExists(asset_src)) {
+                const asset_dst = try std.fs.path.join(self.allocator, &.{ assets_dir, asset });
+                defer self.allocator.free(asset_dst);
+
+                try self.file_utils.copyFile(asset_src, asset_dst);
+            }
         }
 
         std.log.info("Copied static assets", .{});

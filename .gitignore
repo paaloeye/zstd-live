@@ -42,9 +42,6 @@ output/
 .cache
 .build
 
-# Downloaded Zig sources cache
-~/.local/share/zstd-live/
-
 # Temporary build files
 *.tmp
 .backup

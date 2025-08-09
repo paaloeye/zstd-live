@@ -57,3 +57,7 @@ indent_style = tab
 [*.nu]
 indent_style = space
 indent_size = 4
+
+[*.zig]
+indent_style = space
+indent_size = 4
