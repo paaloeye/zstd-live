@@ -40,11 +40,8 @@ jobs:
       run: ./zig-out/bin/zstd-live generate --all-versions --output dist
 
     - name: Deploy to Cloudflare Pages
-      uses: cloudflare/pages-action@v1
+      uses: cloudflare/wrangler-action@v3
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        projectName: zstd-live
-        directory: dist
-        gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-        wranglerVersion: '3'
+        command: pages deploy dist --project-name=zstd-live
