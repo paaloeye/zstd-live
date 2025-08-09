@@ -106,7 +106,7 @@ fn printVersion() void {
         \\from Zig standard library source code.
         \\
         \\Repository: https://github.com/paaloeye/zstd-live
-        \\Live Site:  https://stroem.me/p/zstd/live
+        \\Live Site:  https://zstd-live.pages.dev
         \\
         \\Built with Zig
     ;

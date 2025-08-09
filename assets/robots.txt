@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap location (if generated in future)
-# Sitemap: https://stroem.me/p/zstd/live/sitemap.xml
+# Sitemap: https://zstd-live.pages.dev/sitemap.xml

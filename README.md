@@ -6,7 +6,7 @@
 [![Deploy](https://github.com/paaloeye/zstd-live/workflows/Deploy%20to%20Cloudflare%20Pages/badge.svg)](https://github.com/paaloeye/zstd-live/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENCE)
 
-**Live Documentation**: [stroem.me/p/zstd/live](https://stroem.me/p/zstd/live)
+**Live Documentation**: [zstd-live.pages.dev](https://zstd-live.pages.dev)
 
 ## Overview
 

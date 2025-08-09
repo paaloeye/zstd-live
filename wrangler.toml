@@ -1,11 +1,7 @@
 name = "zstd-live"
 compatibility_date = "2024-01-01"
 
-[env.production]
-route = { pattern = "stroem.me/p/zstd/live", zone_name = "stroem.me" }
-
-[env.preview]
-# Preview deployments will use the default pages.dev domain
+# Using default pages.dev domain (zstd-live.pages.dev)
 
 # Cloudflare Pages configuration
 [pages]
@@ -37,11 +33,6 @@ for = "/*.svg"
 "Cache-Control" = "public, max-age=31536000, immutable"
 
 # Redirect rules
-[[pages.redirects]]
-from = "/"
-to = "/index.html"
-status = 200
-
 [[pages.redirects]]
 from = "/latest/*"
 to = "/0.15.0-master/:splat"

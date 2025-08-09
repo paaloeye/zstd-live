@@ -21,7 +21,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a Zig-native tool called "zstd-live" that generates live HTML documentation sites from Zig standard library source code. It creates a two-column layout inspired by docco.coffee, where the left column shows documentation and public identifiers, and the right column displays the raw Zig source code with syntax highlighting. The tool supports multiple Zig versions and converts `@import()` calls into clickable hyperlinks for navigation.
 
 **Repository**: https://github.com/paaloeye/zstd-live
-**Live Site**: https://stroem.me/p/zstd/live
+**Live Site**: https://zstd-live.pages.dev
 **Hosting**: Cloudflare Pages (static)
 
 ## Build and Development Commands
