@@ -250,6 +250,7 @@ pub const Generator = struct {
         try self.file_utils.ensureDir(self.config.output_dir);
 
         const assets = comptime [_][]const u8{
+            "favicon.ico",
             "robots.txt",
             "google7f34a2877a817c63.html",
         };
