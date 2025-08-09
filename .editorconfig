@@ -1,0 +1,59 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# [*/**/devcontainer.json]
+# indent_size = 4
+# indent_style = tab
+# insert_final_newline = false
+
+[*/**/extensions.json]
+indent_size = 4
+indent_style = tab
+
+[*/**/c_cpp_properties.json]
+indent_size = 4
+insert_final_newline = false
+
+[*/**/launch.json]
+indent_size = 4
+insert_final_newline = false
+
+[*/**/settings.json]
+indent_size = 4
+
+[*.rs]
+indent_size = 4
+
+[*.go]
+indent_style = tab
+indent_size = 8
+
+[*.py]
+indent_size = 4
+
+[**/Makefile]
+indent_style = tab
+
+[*/**/conanfile.py]
+indent_size = 4
+
+[.gitmodules]
+indent_style = tab
+indent_size = 8
+
+[**/go.mod]
+indent_style = tab
+
+[*.nu]
+indent_style = space
+indent_size = 4
