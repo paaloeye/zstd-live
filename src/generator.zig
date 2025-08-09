@@ -32,6 +32,9 @@ pub const Generator = struct {
         // Generate index page
         try self.generateIndex();
 
+        // Copy root files
+        try self.copyRootFiles();
+
         // Copy static assets
         try self.copyAssets();
 
@@ -179,6 +182,24 @@ pub const Generator = struct {
         }
     }
 
+    fn copy(self: *Generator, comptime what: []const []const u8, where: []const u8) !void {
+        std.log.info("Copying root files...", .{});
+
+        inline for (what) |asset| {
+            const asset_src = try std.fs.path.join(self.allocator, &.{ "assets", asset });
+            defer self.allocator.free(asset_src);
+
+            if (self.file_utils.pathExists(asset_src)) {
+                const asset_dst = try std.fs.path.join(self.allocator, &.{ where, asset });
+                defer self.allocator.free(asset_dst);
+
+                try self.file_utils.copyFile(asset_src, asset_dst);
+            }
+        }
+
+        std.log.info("Copied static assets", .{});
+    }
+
     pub fn generateIndex(self: *Generator) !void {
         std.log.info("Generating index page...", .{});
 
@@ -215,24 +236,27 @@ pub const Generator = struct {
 
         const assets = comptime [_][]const u8{
             "styles.css",
-            "robots.txt",
             "zig-stdlib-book.svg",
+        };
+
+        try self.copy(&assets, assets_dir);
+
+        std.log.info("Copied static assets", .{});
+    }
+
+    pub fn copyRootFiles(self: *Generator) !void {
+        std.log.info("Copying root files...", .{});
+
+        try self.file_utils.ensureDir(self.config.output_dir);
+
+        const assets = comptime [_][]const u8{
+            "robots.txt",
             "google7f34a2877a817c63.html",
         };
 
-        inline for (assets) |asset| {
-            const asset_src = try std.fs.path.join(self.allocator, &.{ "assets", asset });
-            defer self.allocator.free(asset_src);
+        try self.copy(&assets, self.config.output_dir);
 
-            if (self.file_utils.pathExists(asset_src)) {
-                const asset_dst = try std.fs.path.join(self.allocator, &.{ assets_dir, asset });
-                defer self.allocator.free(asset_dst);
-
-                try self.file_utils.copyFile(asset_src, asset_dst);
-            }
-        }
-
-        std.log.info("Copied static assets", .{});
+        std.log.info("Copied roots files", .{});
     }
 
     pub fn serve(self: *Generator, port: u16) !void {
