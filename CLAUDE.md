@@ -25,6 +25,17 @@ This is a Zig-native tool called "zstd-live" that generates live HTML documentat
 **Live Site**: https://zstd-live.pages.dev
 **Hosting**: Cloudflare Pages (static)
 
+### v2.0.0 Release Highlights
+
+- **🚀 Professional Release Pipeline**: Automated cross-platform builds with GitHub Actions Ship workflow
+- **📦 Enhanced Packaging**: Release archives with proper directory structure and comprehensive documentation
+- **🔐 Security Improvements**: SHA256 checksums for all release assets
+- **🏷️ Professional Project Management**: 30-label system for issues and PRs
+- **🌐 Cross-Platform Excellence**: Support for 7 platforms (macOS, Linux, Windows on multiple architectures)
+- **📋 Rich Release Notes**: Automated changelog generation with installation guides and build information
+- **🛠️ Native Build System**: Pure Zig implementation with no external dependencies
+- **⚡ Performance Optimisations**: ReleaseFast builds for all platforms
+
 ## Build and Development Commands
 
 ### Core Build Commands
@@ -151,12 +162,133 @@ git push origin v2.0.0          # Triggers Ship workflow
 ```
 
 **Release Automation**: The `.github/workflows/ship.yml` workflow automatically:
-- Detects first release vs subsequent releases
-- Builds cross-platform binaries for all 7 supported platforms
-- Creates platform-specific archives (tar.gz for Unix, zip for Windows)
-- Generates SHA256 checksums for all release assets
-- Creates GitHub releases with rich documentation and installation guides
-- Handles pre-release vs stable release detection from tag format
+- **First Release Detection**: Detects if this is the first release and formats accordingly
+- **Cross-Platform Builds**: Builds binaries for all 7 supported platforms (macOS, Linux, Windows on multiple architectures)
+- **Professional Packaging**: Creates platform-specific archives with proper directory structure and documentation
+- **Security**: Generates SHA256 checksums for all release assets
+- **Rich Release Notes**: Creates comprehensive release notes with:
+  - Automated changelog generation from git commits
+  - Build information (Zig version, date, commit)
+- **Release Classification**: Automatically detects pre-release vs stable from tag format
+- **Archive Structure**: Each archive contains binary, README.md, and LICENCE files
+- **Quality Assurance**: Runs format checks and tests before release
+
+### GitHub Labels & PR Management
+
+The repository uses a comprehensive 30-label system for professional issue and PR management:
+
+#### **Release & Version Management (4 labels)**
+```bash
+release          # Release-related issues and PRs
+v2.0.0           # Issues and PRs for v2.0.0 milestone
+pre-release      # Pre-release testing and feedback
+breaking-change  # Breaking changes requiring major version bump
+```
+
+#### **Issue Types (3 labels)**
+```bash
+type:feature     # New features and enhancements
+type:bugfix      # Bug fixes and corrections
+type:maintenance # Maintenance tasks and housekeeping
+```
+
+#### **Component/Area Labels (5 labels)**
+```bash
+ci/cd           # Continuous integration and deployment
+build-system    # Build configuration, Makefile, Zig build
+cross-platform  # Platform compatibility and cross-compilation
+workflow        # GitHub Actions workflows
+documentation   # Improvements or additions to documentation
+```
+
+#### **Platform & Architecture (6 labels)**
+```bash
+platform:macos / platform:linux / platform:windows
+arch:x86_64 / arch:aarch64 / arch:riscv64
+```
+
+#### **Priority & Status (9 labels)**
+```bash
+# Priority
+priority:high / priority:medium / priority:low
+
+# Status
+status:blocked / status:in-progress / status:ready-for-review / status:needs-testing
+
+# Community
+community / reviewer-needed
+```
+
+#### **Community Labels (3 labels)**
+```bash
+good-first-issue # Good for newcomers
+help-wanted      # Extra attention is needed
+question        # Further information is requested
+```
+
+#### **PR Labeling Best Practices**
+
+**Example: Major Feature PR**
+```bash
+gh pr edit <PR_NUMBER> --add-label "v2.0.0,type:feature,ci/cd,workflow,cross-platform"
+```
+
+**Example: Platform-Specific Bug**
+```bash
+gh pr edit <PR_NUMBER> --add-label "type:bugfix,platform:macos,arch:aarch64,priority:high"
+```
+
+**Example: Documentation Update**
+```bash
+gh pr edit <PR_NUMBER> --add-label "documentation,type:maintenance,community"
+```
+
+#### **Label Assignment Guidelines**
+- **Always include**: At least one `type:*` label
+- **Version labels**: Add `v2.0.0` for milestone-related work
+- **Component labels**: Add relevant technical area labels
+- **Platform labels**: For platform-specific issues
+- **Priority labels**: For issues requiring urgent attention
+- **Status labels**: To track progress through development workflow
+
+### Contribution Guidelines
+
+#### **Development Workflow**
+1. **Fork and Branch**: Fork repository, create feature branch
+2. **Development**: Make changes following project conventions
+3. **Quality Checks**: Run `make check` (format + tests)
+4. **PR Creation**: Create PR with descriptive title and body
+5. **Label Assignment**: Apply appropriate labels using guidelines above
+6. **Review Process**: Address feedback, maintain `status:ready-for-review`
+7. **Merge**: Maintainer merges after approval
+
+#### **PR Status Workflow**
+```
+[Create PR] → status:ready-for-review
+     ↓
+[Issues Found] → status:needs-testing / status:blocked
+     ↓
+[Address Issues] → status:ready-for-review
+     ↓
+[Approved] → [Merged]
+```
+
+#### **Priority Assignment Guidelines**
+- `priority:high`: Security fixes, release blockers, critical bugs
+- `priority:medium`: Important features, significant improvements
+- `priority:low`: Nice-to-have features, minor improvements
+
+#### **Community Contributions**
+- Use `community` label for external contributions
+- Add `good-first-issue` for newcomer-friendly tasks
+- Include `help-wanted` when extra attention is needed
+- Use `reviewer-needed` when maintainer review is required
+
+#### **Breaking Changes**
+- Always use `breaking-change` label
+- Document in commit message with `BREAKING CHANGE:` footer
+- Consider if change requires major version bump
+- Provide migration guide in PR description
 
 ### Supported Zig Versions
 Current versions defined in `src/config.zig`:
@@ -258,13 +390,42 @@ The Zig parser recognises and processes these language constructs:
 - **Formatting**: Automatic formatting enforced via `zig build fmt` - REQUIRED before commits
 - **Testing**: Unit tests run via `zig build test` targeting `main.zig`
 - **Dependencies**: Pure Zig standard library only, no external dependencies
+- **Release Archives**: `.release/` directory contains cross-platform release packages
+- **Cross-Compilation**: Supports 7 platforms via `make release` command
+
+### Project Management
+
+#### **Label Management**
+```bash
+# List all labels
+gh label list
+
+# Create new label
+gh label create "new-label" --description "Description" --color "ff6b6b"
+
+# Edit existing label
+gh label edit "old-name" --name "new-name" --description "New description"
+
+# Apply labels to PR
+gh pr edit <PR_NUMBER> --add-label "label1,label2,label3"
+```
+
+#### **PR Review Process**
+1. **Initial Review**: Check for proper labeling and description
+2. **Technical Review**: Verify code quality, tests, and formatting
+3. **Build Verification**: Ensure CI/CD passes on all platforms
+4. **Documentation Check**: Verify README/CLAUDE.md updates if needed
+5. **Release Impact**: Consider if PR affects v2.0.0 milestone
 
 ### Deployment & Hosting
 - **CI/CD**: GitHub Actions handle build, test, and deployment pipeline
+- **Release Automation**: Ship workflow (`.github/workflows/ship.yml`) handles professional releases
 - **Hosting**: Cloudflare Pages (`zstd-live.pages.dev`)
 - **Configuration**: `wrangler.toml` configures Cloudflare Pages deployment
 - **Redirects**: `_redirects` file provides `/latest/*` and `/stable/*` shortcuts
 - **Caching**: Optimised cache headers for HTML (1h), static assets (1y)
+- **Security**: All release assets include SHA256 checksums for verification
+- **Cross-Platform Distribution**: Automated builds for macOS, Linux, Windows (x86_64, aarch64, riscv64)
 
 ### File Processing
 - **Source Discovery**: Recursively processes `.zig` files in Zig stdlib directories
