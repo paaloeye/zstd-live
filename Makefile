@@ -93,23 +93,26 @@ release-archive: release ## Create release archives for all platforms
 	@echo "Creating release archives..."
 	@rm -rf .release/*
 	@for binary in $(ZIG_OUT)/bin/zstd-live-*; do \
-		if [ -f "$$binary" ] && [[ "$$binary" != *.pdb ]]; then \
+		if [ -f "$$binary" ] && [ "$$(echo $$binary | grep -c '\.pdb$$')" = "0" ]; then \
 			binary_name=$$(basename "$$binary"); \
-			if [[ "$$binary_name" == *"windows"* ]]; then \
-				echo "Creating ZIP archive for $$binary_name"; \
-				mkdir -p ".release/$$binary_name"; \
-				cp "$$binary" ".release/$$binary_name/$$binary_name"; \
-				cp README.md LICENCE ".release/$$binary_name/"; \
-				(cd .release && zip -r "$$binary_name.zip" "$$binary_name"); \
-				rm -rf ".release/$$binary_name"; \
-			else \
-				echo "Creating tar.gz archive for $$binary_name"; \
-				mkdir -p ".release/$$binary_name"; \
-				cp "$$binary" ".release/$$binary_name/$$binary_name"; \
-				cp README.md LICENCE ".release/$$binary_name/"; \
-				(cd .release && tar -czf "$$binary_name.tar.gz" "$$binary_name"); \
-				rm -rf ".release/$$binary_name"; \
-			fi; \
+			case "$$binary_name" in \
+				*windows*) \
+					echo "Creating ZIP archive for $$binary_name"; \
+					mkdir -p ".release/$$binary_name"; \
+					cp "$$binary" ".release/$$binary_name/$$binary_name"; \
+					cp README.md LICENCE ".release/$$binary_name/"; \
+					(cd .release && zip -r "$$binary_name.zip" "$$binary_name"); \
+					rm -rf ".release/$$binary_name"; \
+					;; \
+				*) \
+					echo "Creating tar.gz archive for $$binary_name"; \
+					mkdir -p ".release/$$binary_name"; \
+					cp "$$binary" ".release/$$binary_name/$$binary_name"; \
+					cp README.md LICENCE ".release/$$binary_name/"; \
+					(cd .release && tar -czf "$$binary_name.tar.gz" "$$binary_name"); \
+					rm -rf ".release/$$binary_name"; \
+					;; \
+			esac; \
 		fi; \
 	done
 	@echo "Release archives created in .release/"
