@@ -4,13 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## IMPORTANT
 
+- ALWAYS read [GOTCHA.md](./GOTCHA.md) before making changes - Contains critical pitfalls and solutions
 - PREFER British English over American English spelling and grammar
 - Files and Directories MUST NOT have **dashes** in names/paths (Use **underscore** instead)
 - NEVER use Git LFS
 - ALWAYS run `make format` before `git commit` (uses `zig build fmt`)
 - USE Emoji in [README.md](./README.md) or **docs/\*.md** with care. NOT MUCH.
 - ALWAYS use `[x]` or `[ ]` instead of ✅ / 🔲 / for checkmarks
-- NEVER use `[x]` or [ ]` in Markdown tables; USE ✅ / 🔲 / instead. **Reason**: it's not supported
+- NEVER use `[x]` or `[ ]` in Markdown tables; USE ✅ / 🔲 / instead. **Reason**: it's not supported
 - PREFER [GitHub Emoji API](https://api.github.com/emojis) over UTF Emoji
 - ALWAYS add footer to new Markdown files with a AI generated content banner (!IMPORTANT)
 - USE `zig fetch <url>` when add dependencies to build.zon

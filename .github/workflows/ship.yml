@@ -70,12 +70,13 @@ jobs:
             echo "" >> release_notes.md
             echo "This is the first release of zstd-live! 🚀" >> release_notes.md
             echo "" >> release_notes.md
-            echo "### Features" >> release_notes.md
+            echo "### Changelog" >> release_notes.md
             echo "" >> release_notes.md
             git log --pretty=format:"- %s" --reverse >> release_notes.md
           else
             echo "### What's Changed" >> release_notes.md
             echo "" >> release_notes.md
+            # AI-TODO: log messages have to in reversed order
             git log --pretty=format:"- %s" $PREV_TAG..HEAD >> release_notes.md
             echo "" >> release_notes.md
             echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/$PREV_TAG...v${{ steps.version.outputs.version }}" >> release_notes.md
