@@ -6,18 +6,20 @@ We welcome contributions to zstd-live! This document provides guidelines and inf
 
 1. **Fork** the repository
 2. **Clone** your fork: `git clone https://github.com/YOUR_USERNAME/zstd-live.git`
-3. **Setup** development environment: `make dev`
-4. **Create** a feature branch: `git checkout -b feat/amazing-feature`
-5. **Make** your changes and add tests
-6. **Test** your changes: `make check` (runs formatting and tests)
-7. **Commit** your changes with conventional commits
-8. **Push** and create a Pull Request
+3. **Install pre-commit hooks**: `pre-commit install` (ensures code quality)
+4. **Setup** development environment: `make dev`
+5. **Create** a feature branch: `git checkout -b feat/amazing-feature`
+6. **Make** your changes and add tests
+7. **Test** your changes: `make check` (runs formatting and tests)
+8. **Commit** your changes with conventional commits (pre-commit hooks will run automatically)
+9. **Push** and create a Pull Request
 
 ## 📋 Development Requirements
 
 - **Zig 0.14.0** or later
 - **Make** (optional, but recommended)
 - **Git** with conventional commit setup
+- **Pre-commit** (`pip install pre-commit` or via package manager)
 
 ## 🛠️ Development Commands
 
@@ -48,6 +50,11 @@ make serve
 
 # Complete development setup
 make dev
+
+# Pre-commit hooks management
+pre-commit install          # Install hooks (run once after cloning)
+pre-commit run --all-files  # Run hooks on all files manually
+pre-commit autoupdate       # Update hook versions
 ```
 
 ## 🏷️ GitHub Labels System
@@ -135,10 +142,11 @@ We use a comprehensive 30-label system for professional issue and PR management:
 
 ### **Code Standards**
 
+- **Pre-commit Hooks**: Must be installed (`pre-commit install`) and passing
 - **Formatting**: Must pass `make check-fmt` (Zig's built-in formatter)
 - **Testing**: All new features must include tests
 - **Documentation**: Update README.md or CLAUDE.md for significant changes
-- **Conventional Commits**: Use conventional commit messages
+- **Conventional Commits**: Use conventional commit messages (enforced by pre-commit)
 
 ### **Breaking Changes**
 - Always use `breaking-change` label

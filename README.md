@@ -80,6 +80,7 @@ zstd-live version
 ```bash
 git clone https://github.com/paaloeye/zstd-live.git
 cd zstd-live
+pre-commit install  # Install code quality hooks (optional, for contributors)
 make build
 make install
 ```
@@ -106,6 +107,7 @@ zstd-live update
 
 - Zig 0.13.0 or later
 - Make (optional, but recommended)
+- Pre-commit (for contributors): `pip install pre-commit`
 
 ### Build Commands
 

@@ -27,6 +27,8 @@ Brief description of what this PR does and why.
 - [ ] Not applicable / platform-agnostic
 
 ## Code Quality
+- [ ] I have installed pre-commit hooks (`pre-commit install`)
+- [ ] Pre-commit hooks pass on all my changes
 - [ ] My code follows the project's style guidelines
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
