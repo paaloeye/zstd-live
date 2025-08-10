@@ -1,4 +1,4 @@
-.PHONY: help build test format check-fmt clean generate serve deploy install
+.PHONY: help build release test format check-fmt clean generate serve deploy install
 .DEFAULT_GOAL := help
 
 # Variables
@@ -13,9 +13,13 @@ help: ## Show this help message
 	@echo 'Targets:'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-build: ## Build Zig application
+release: ## Build binaries for all supported platforms
 	@echo "Building $(BINARY_NAME)..."
 	@zig build
+
+release: ## Build release binaries for all supported platforms
+	@echo "Building release binaries for all supported platforms..."
+	@zig build release
 
 test: ## Run all tests
 	@echo "Running tests..."
@@ -88,5 +92,5 @@ check: check-fmt test ## Run all checks (format + tests)
 	@echo "All checks passed!"
 
 # Release helpers
-release-check: clean check build generate ## Full release validation
+release-check: clean check build release generate ## Full release validation
 	@echo "Release validation completed successfully!"

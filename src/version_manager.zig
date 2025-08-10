@@ -64,28 +64,78 @@ pub const VersionManager = struct {
         const version_dir = try self.getVersionPath(version.name);
         defer self.allocator.free(version_dir);
 
+        // Create version directory
+        try std.fs.cwd().makePath(version_dir);
+
         // Create temporary file for download
-        const temp_file = try std.fs.path.join(self.allocator, &.{ self.config.cache_dir, "temp.tar.gz" });
+        const temp_file = try std.fs.path.join(self.allocator, &.{ self.config.cache_dir, "temp.zip" });
         defer self.allocator.free(temp_file);
 
-        // Download using curl (simple approach for now)
-        const download_cmd = try std.fmt.allocPrint(self.allocator, "curl -L \"{s}\" -o \"{s}\"", .{ version.url, temp_file });
-        defer self.allocator.free(download_cmd);
+        // Download using native HTTP client
+        try self.downloadFile(version.url, temp_file);
 
-        var download_process = std.process.Child.init(&.{ "sh", "-c", download_cmd }, self.allocator);
-        download_process.stdout_behavior = .Ignore;
-        download_process.stderr_behavior = .Ignore;
+        // Extract ZIP archive
+        try self.extractZipArchive(temp_file, version_dir);
 
-        const download_result = try download_process.spawnAndWait();
-        if (download_result != .Exited or download_result.Exited != 0) {
+        // Cleanup temp file
+        std.fs.cwd().deleteFile(temp_file) catch {};
+
+        std.log.info("Successfully downloaded and extracted Zig {s}", .{version.name});
+    }
+
+    fn downloadFile(self: *VersionManager, url: []const u8, output_path: []const u8) !void {
+        var client = std.http.Client{ .allocator = self.allocator };
+        defer client.deinit();
+
+        // Parse URI
+        const uri = try std.Uri.parse(url);
+
+        // Create request
+        var req = try client.open(.GET, uri, .{
+            .server_header_buffer = try self.allocator.alloc(u8, 8192),
+        });
+        defer req.deinit();
+
+        // Send request
+        try req.send();
+        try req.finish();
+        try req.wait();
+
+        // Check response status
+        if (req.response.status != .ok) {
             return error.DownloadFailed;
         }
 
-        // Extract using tar
-        const extract_cmd = try std.fmt.allocPrint(self.allocator, "mkdir -p \"{s}\" && tar -xzf \"{s}\" -C \"{s}\" --strip-components=1", .{ version_dir, temp_file, version_dir });
+        // Create output file
+        const file = try std.fs.cwd().createFile(output_path, .{});
+        defer file.close();
+
+        // Read and write response body
+        var buffer: [8192]u8 = undefined;
+        while (true) {
+            const bytes_read = try req.readAll(&buffer);
+            if (bytes_read == 0) break;
+            try file.writeAll(buffer[0..bytes_read]);
+        }
+    }
+
+    fn extractZipArchive(self: *VersionManager, zip_path: []const u8, extract_dir: []const u8) !void {
+        // For now, fall back to system command if native ZIP extraction is complex
+        // TODO: Implement native ZIP extraction or use a Zig ZIP library
+        const builtin = @import("builtin");
+
+        const extract_cmd = switch (builtin.os.tag) {
+            .windows => try std.fmt.allocPrint(self.allocator, "powershell -Command \"Expand-Archive -Path '{s}' -DestinationPath '{s}' -Force\"", .{ zip_path, extract_dir }),
+            else => try std.fmt.allocPrint(self.allocator, "unzip -q -o '{s}' -d '{s}'", .{ zip_path, extract_dir }),
+        };
         defer self.allocator.free(extract_cmd);
 
-        var extract_process = std.process.Child.init(&.{ "sh", "-c", extract_cmd }, self.allocator);
+        const shell_cmd = switch (builtin.os.tag) {
+            .windows => &.{ "powershell", "-Command" },
+            else => &.{ "sh", "-c" },
+        };
+
+        var extract_process = std.process.Child.init(&.{ shell_cmd[0], shell_cmd[1], extract_cmd }, self.allocator);
         extract_process.stdout_behavior = .Ignore;
         extract_process.stderr_behavior = .Ignore;
 
@@ -94,10 +144,59 @@ pub const VersionManager = struct {
             return error.ExtractionFailed;
         }
 
-        // Cleanup temp file
-        std.fs.cwd().deleteFile(temp_file) catch {};
+        // Move extracted contents up one level (GitHub archives create a subdirectory)
+        try self.flattenExtractedArchive(extract_dir);
+    }
 
-        std.log.info("Successfully downloaded and extracted Zig {s}", .{version.name});
+    fn flattenExtractedArchive(self: *VersionManager, extract_dir: []const u8) !void {
+        var dir = try std.fs.cwd().openDir(extract_dir, .{ .iterate = true });
+        defer dir.close();
+
+        var iterator = dir.iterate();
+        var subdirs = std.ArrayList([]const u8).init(self.allocator);
+        defer {
+            for (subdirs.items) |item| {
+                self.allocator.free(item);
+            }
+            subdirs.deinit();
+        }
+
+        // Find subdirectories (GitHub creates one subdirectory with the content)
+        while (try iterator.next()) |entry| {
+            if (entry.kind == .directory) {
+                try subdirs.append(try self.allocator.dupe(u8, entry.name));
+            }
+        }
+
+        // If there's exactly one subdirectory, move its contents up
+        if (subdirs.items.len == 1) {
+            const subdir_path = try std.fs.path.join(self.allocator, &.{ extract_dir, subdirs.items[0] });
+            defer self.allocator.free(subdir_path);
+
+            const temp_dir = try std.fmt.allocPrint(self.allocator, "{s}_temp", .{extract_dir});
+            defer self.allocator.free(temp_dir);
+
+            // Move subdirectory to temp location
+            try std.fs.cwd().rename(subdir_path, temp_dir);
+
+            // Move contents from temp to extract_dir
+            var temp_d = try std.fs.cwd().openDir(temp_dir, .{ .iterate = true });
+            defer temp_d.close();
+
+            var temp_iterator = temp_d.iterate();
+            while (try temp_iterator.next()) |entry| {
+                const src_path = try std.fs.path.join(self.allocator, &.{ temp_dir, entry.name });
+                defer self.allocator.free(src_path);
+
+                const dst_path = try std.fs.path.join(self.allocator, &.{ extract_dir, entry.name });
+                defer self.allocator.free(dst_path);
+
+                try std.fs.cwd().rename(src_path, dst_path);
+            }
+
+            // Remove empty temp directory
+            try std.fs.cwd().deleteDir(temp_dir);
+        }
     }
 
     pub fn listAvailableVersions(self: *VersionManager) ![][]const u8 {

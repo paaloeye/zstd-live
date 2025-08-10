@@ -32,6 +32,10 @@ This is a Zig-native tool called "zstd-live" that generates live HTML documentat
 make build           # Preferred: uses Makefile wrapper
 # OR: zig build       # Direct Zig build
 
+# Build release binaries for all supported platforms
+make release         # Cross-compiles for macOS/Linux on x86_64/aarch64/riscv64
+# OR: zig build release
+
 # Run tests
 make test            # Runs all unit tests
 # OR: zig build test
@@ -50,6 +54,27 @@ zig build run -- <args>
 # Clean build artifacts
 make clean           # Removes zig-out/ and dist/
 ```
+
+### Cross-Platform Support
+
+The build system supports cross-compilation for the following platforms:
+
+**Supported Targets:**
+- `zstd-live-macos-x86_64` (macOS Intel)
+- `zstd-live-macos-aarch64` (macOS Apple Silicon)
+- `zstd-live-linux-x86_64` (Linux Intel)
+- `zstd-live-linux-aarch64` (Linux ARM64)
+- `zstd-live-linux-riscv64` (Linux RISC-V)
+- `zstd-live-windows-x86_64.exe` (Windows Intel)
+- `zstd-live-windows-aarch64.exe` (Windows ARM64)
+
+**Cross-Platform Features:**
+- Native HTTP downloads using `std.http.Client` (replaces curl)
+- Cross-platform directory creation using `std.fs.cwd().makePath()`
+- Platform-specific cache directories (Windows: AppData, macOS: Library/Caches, Linux: .local/share)
+- ZIP archive extraction with OS-specific tools (PowerShell on Windows, unzip on Unix)
+
+All release builds use `.ReleaseFast` optimisation for maximum performance.
 
 ### Documentation Generation
 ```bash

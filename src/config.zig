@@ -11,31 +11,31 @@ pub const SUPPORTED_VERSIONS = [_]ZigVersion{
     .{
         .name = "0.15.0-master",
         .tag = "master",
-        .url = "https://github.com/ziglang/zig/archive/refs/heads/master.tar.gz",
+        .url = "https://github.com/ziglang/zig/archive/refs/heads/master.zip",
         .description = "Latest development version",
     },
     .{
         .name = "0.14.1",
         .tag = "0.14.1",
-        .url = "https://github.com/ziglang/zig/archive/refs/tags/0.14.1.tar.gz",
+        .url = "https://github.com/ziglang/zig/archive/refs/tags/0.14.1.zip",
         .description = "Latest stable release",
     },
     .{
         .name = "0.13.0",
         .tag = "0.13.0",
-        .url = "https://github.com/ziglang/zig/archive/refs/tags/0.13.0.tar.gz",
+        .url = "https://github.com/ziglang/zig/archive/refs/tags/0.13.0.zip",
         .description = "Stable release",
     },
     .{
         .name = "0.12.0",
         .tag = "0.12.0",
-        .url = "https://github.com/ziglang/zig/archive/refs/tags/0.12.0.tar.gz",
+        .url = "https://github.com/ziglang/zig/archive/refs/tags/0.12.0.zip",
         .description = "Stable release",
     },
     .{
         .name = "0.11.0",
         .tag = "0.11.0",
-        .url = "https://github.com/ziglang/zig/archive/refs/tags/0.11.0.tar.gz",
+        .url = "https://github.com/ziglang/zig/archive/refs/tags/0.11.0.zip",
         .description = "Stable release",
     },
 };
@@ -46,8 +46,32 @@ pub const Config = struct {
     port: u16,
 
     pub fn default(allocator: std.mem.Allocator) !Config {
-        const home = std.posix.getenv("HOME") orelse ".";
-        const cache_dir = try std.fs.path.join(allocator, &.{ home, ".local", "share", "zstd-live", "sources" });
+        const builtin = @import("builtin");
+
+        // Cross-platform home directory detection
+        const home = switch (builtin.os.tag) {
+            .windows => blk: {
+                // Try USERPROFILE first, then HOMEDRIVE+HOMEPATH fallback
+                if (std.process.getEnvVarOwned(allocator, "USERPROFILE")) |profile| {
+                    break :blk profile;
+                } else |_| {
+                    const drive = std.process.getEnvVarOwned(allocator, "HOMEDRIVE") catch break :blk try allocator.dupe(u8, ".");
+                    defer allocator.free(drive);
+                    const path = std.process.getEnvVarOwned(allocator, "HOMEPATH") catch break :blk try allocator.dupe(u8, ".");
+                    defer allocator.free(path);
+                    break :blk try std.fmt.allocPrint(allocator, "{s}{s}", .{ drive, path });
+                }
+            },
+            else => std.process.getEnvVarOwned(allocator, "HOME") catch try allocator.dupe(u8, "."),
+        };
+        defer if (!std.mem.eql(u8, home, ".")) allocator.free(home);
+
+        // Cross-platform cache directory structure
+        const cache_dir = switch (builtin.os.tag) {
+            .windows => try std.fs.path.join(allocator, &.{ home, "AppData", "Local", "zstd-live", "sources" }),
+            .macos => try std.fs.path.join(allocator, &.{ home, "Library", "Caches", "zstd-live", "sources" }),
+            else => try std.fs.path.join(allocator, &.{ home, ".local", "share", "zstd-live", "sources" }),
+        };
 
         return Config{
             .cache_dir = cache_dir,

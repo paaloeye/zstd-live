@@ -1,6 +1,6 @@
 # zstd-live
 
-> A modern Zig-native tool for generating live HTML documentation from Zig standard library
+> A modern Zig-native tool for generating live documentation from Zig standard library
 
 [![CI](https://github.com/paaloeye/zstd-live/workflows/CI/badge.svg)](https://github.com/paaloeye/zstd-live/actions)
 [![Deploy](https://github.com/paaloeye/zstd-live/workflows/Deploy%20to%20Cloudflare%20Pages/badge.svg)](https://github.com/paaloeye/zstd-live/actions)
@@ -10,7 +10,7 @@
 
 ## Overview
 
-zstd-live generates beautiful, live HTML documentation from Zig standard library source code.
+`zstd-live` generates beautiful, live documentation from Zig standard library source code.
 It features a two-column layout inspired by docco.coffee, with documentation and public identifiers on the
 left and syntax-highlighted source code on the right.
 
@@ -31,10 +31,28 @@ left and syntax-highlighted source code on the right.
 
 Download the latest release for your platform from [GitHub Releases](https://github.com/paaloeye/zstd-live/releases):
 
+**Supported Platforms:**
+- macOS (Intel): `zstd-live-macos-x86_64`
+- macOS (Apple Silicon): `zstd-live-macos-aarch64`
+- Linux (Intel): `zstd-live-linux-x86_64`
+- Linux (ARM64): `zstd-live-linux-aarch64`
+- Linux (RISC-V): `zstd-live-linux-riscv64`
+- Windows (Intel): `zstd-live-windows-x86_64.exe`
+- Windows (ARM64): `zstd-live-windows-aarch64.exe`
+
 ```bash
-# Linux/macOS
+# Linux x86_64
 curl -L https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-linux-x86_64.tar.gz | tar xz
 sudo mv zstd-live-linux-x86_64 /usr/local/bin/zstd-live
+
+# macOS Apple Silicon
+curl -L https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-macos-aarch64.tar.gz | tar xz
+sudo mv zstd-live-macos-aarch64 /usr/local/bin/zstd-live
+
+# Windows PowerShell
+Invoke-WebRequest -Uri "https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-windows-x86_64.zip" -OutFile "zstd-live.zip"
+Expand-Archive -Path "zstd-live.zip" -DestinationPath "."
+# Add to PATH or move to desired location
 
 # macOS with Homebrew (coming soon)
 brew install paaloeye/tap/zstd-live
@@ -77,6 +95,9 @@ zstd-live update
 ```bash
 # Build the application
 make build
+
+# Build release binaries for all supported platforms
+make release
 
 # Run tests
 make test

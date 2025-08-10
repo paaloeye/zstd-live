@@ -3,6 +3,11 @@ const config = @import("config.zig");
 const generator = @import("generator.zig");
 const version_manager = @import("version_manager.zig");
 
+// Override log level for release builds
+pub const std_options: std.Options = .{
+    .log_level = .info,
+};
+
 const Command = enum {
     generate,
     serve,
@@ -19,7 +24,7 @@ const Args = struct {
     output_dir: ?[]const u8 = null,
     port: ?u16 = null,
 
-    pub fn parse(allocator: std.mem.Allocator, args: [][:0]u8) !Args {
+    pub fn parse(_allocator: std.mem.Allocator, args: [][:0]u8) !Args {
         if (args.len < 2) {
             return Args{ .command = .help };
         }
@@ -57,7 +62,7 @@ const Args = struct {
             }
         }
 
-        _ = allocator; // Suppress unused parameter warning
+        _ = _allocator; // Suppress unused parameter warning
         return result;
     }
 };
