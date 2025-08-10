@@ -14,34 +14,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Zig
-      uses: mlugg/setup-zig@v2
-      with:
-        version: '0.14.0'
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: '0.14.0'
 
-    - name: Cache Zig stdlib sources
-      uses: actions/cache@v4
-      with:
-        path: ~/.local/share/zstd-live/sources
-        key: zig-stdlib-${{ hashFiles('src/config.zig') }}
-        restore-keys: |
-          zig-stdlib-
+      - name: Cache Zig stdlib sources
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/zstd-live/sources
+          key: zig-stdlib-${{ hashFiles('src/config.zig') }}
+          restore-keys: |
+            zig-stdlib-
 
-    - name: Build application
-      run: zig build -Doptimize=ReleaseFast
+      - name: Build application
+        run: zig build -Doptimize=ReleaseFast
 
-    - name: Update Zig stdlib sources
-      run: ./zig-out/bin/zstd-live update
+      - name: Update Zig stdlib sources
+        run: ./zig-out/bin/zstd-live update
 
-    - name: Generate documentation
-      run: ./zig-out/bin/zstd-live generate --all-versions --output dist
+      - name: Generate documentation
+        run: ./zig-out/bin/zstd-live generate --all-versions --output dist
 
-    - name: Deploy to Cloudflare Pages
-      uses: cloudflare/wrangler-action@v3
-      with:
-        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        command: pages deploy dist --project-name=zstd-live --commit-dirty=false
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=zstd-live --commit-dirty=true

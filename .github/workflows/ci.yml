@@ -1,3 +1,4 @@
+# Continuous Integration recipes
 name: CI
 
 on:
@@ -17,22 +18,22 @@ jobs:
         zig-version: ['0.13.0', '0.14.0', '0.14.1']
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Zig
-      uses: mlugg/setup-zig@v2
-      with:
-        version: ${{ matrix.zig-version }}
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: ${{ matrix.zig-version }}
 
-    - name: Check formatting
-      run: zig build check-fmt
+      - name: Check formatting
+        run: zig build check-fmt
 
-    - name: Run tests
-      run: zig build test
+      - name: Run tests
+        run: zig build test
 
-    - name: Build application
-      run: zig build
+      - name: Build application
+        run: zig build
 
   build:
     name: Build Release
@@ -41,25 +42,25 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup Zig
-      uses: goto-bus-stop/setup-zig@v2
-      with:
-        version: '0.14.0'
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: '0.14.1'
 
-    - name: Build release
-      run: zig build -Doptimize=ReleaseFast
+      - name: Build release
+        run: zig build -Doptimize=ReleaseFast
 
-    - name: Generate documentation
-      run: make generate
+      - name: Generate documentation
+        run: make generate
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: zstd-live-${{ github.sha }}
-        path: |
-          zig-out/bin/zstd-live
-          dist/
-        retention-days: 30
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: zstd-live-${{ github.sha }}
+          path: |
+            zig-out/bin/zstd-live
+            dist/
+          retention-days: 30

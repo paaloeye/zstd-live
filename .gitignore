@@ -45,3 +45,5 @@ output/
 # Temporary build files
 *.tmp
 .backup
+.release
+vendor

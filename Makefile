@@ -1,4 +1,4 @@
-.PHONY: help build release test format check-fmt clean generate serve deploy install
+.PHONY: help build release test format check-fmt clean generate serve deploy install release-archive
 .DEFAULT_GOAL := help
 
 # Variables
@@ -34,6 +34,7 @@ clean: ## Clean build artifacts and generated documentation
 	@rm -rf $(ZIG_OUT)
 	@rm -rf ./.zig-cache
 	@rm -rf $(OUTPUT_DIR)
+	@rm -rf .release/*
 	@echo "Clean completed."
 
 install: build ## Install the binary to local bin directory
@@ -88,5 +89,31 @@ check: check-fmt test ## Run all checks (format + tests)
 	@echo "All checks passed!"
 
 # Release helpers
+release-archive: release ## Create release archives for all platforms
+	@echo "Creating release archives..."
+	@rm -rf .release/*
+	@for binary in $(ZIG_OUT)/bin/zstd-live-*; do \
+		if [ -f "$$binary" ] && [[ "$$binary" != *.pdb ]]; then \
+			binary_name=$$(basename "$$binary"); \
+			if [[ "$$binary_name" == *"windows"* ]]; then \
+				echo "Creating ZIP archive for $$binary_name"; \
+				mkdir -p ".release/$$binary_name"; \
+				cp "$$binary" ".release/$$binary_name/$$binary_name"; \
+				cp README.md LICENCE ".release/$$binary_name/"; \
+				(cd .release && zip -r "$$binary_name.zip" "$$binary_name"); \
+				rm -rf ".release/$$binary_name"; \
+			else \
+				echo "Creating tar.gz archive for $$binary_name"; \
+				mkdir -p ".release/$$binary_name"; \
+				cp "$$binary" ".release/$$binary_name/$$binary_name"; \
+				cp README.md LICENCE ".release/$$binary_name/"; \
+				(cd .release && tar -czf "$$binary_name.tar.gz" "$$binary_name"); \
+				rm -rf ".release/$$binary_name"; \
+			fi; \
+		fi; \
+	done
+	@echo "Release archives created in .release/"
+	@ls -la .release/
+
 release-check: clean check build release generate ## Full release validation
 	@echo "Release validation completed successfully!"

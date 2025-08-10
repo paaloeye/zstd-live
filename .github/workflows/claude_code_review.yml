@@ -29,6 +29,11 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: '0.14.1'
+
       - name: Run Claude Code Review
         id: claude-review
         uses: anthropics/claude-code-action@beta

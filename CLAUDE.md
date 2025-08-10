@@ -15,6 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - ALWAYS add footer to new Markdown files with a AI generated content banner (!IMPORTANT)
 - USE `zig fetch <url>` when add dependencies to build.zon
 - ALWAYS run `make help` if you see a Makefile to learn targets and semantic of that subdirectory
+- PREFER `make clean` over `rm -rf`
 
 ## Project Overview
 
