@@ -3,7 +3,7 @@ const config = @import("config.zig");
 const generator = @import("generator.zig");
 const version_manager = @import("version_manager.zig");
 
-// Override log level for release builds
+// Log level info in release build
 pub const std_options: std.Options = .{
     .log_level = .info,
 };
