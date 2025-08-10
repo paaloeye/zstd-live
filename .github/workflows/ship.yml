@@ -64,6 +64,7 @@ jobs:
           echo "## Changes" > release_notes.md
           echo "" >> release_notes.md
 
+          # Detect first release
           if [ -z "$PREV_TAG" ]; then
             echo "🎉 **Initial Release**" >> release_notes.md
             echo "" >> release_notes.md

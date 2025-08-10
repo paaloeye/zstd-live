@@ -37,6 +37,9 @@ make build           # Preferred: uses Makefile wrapper
 make release         # Cross-compiles for macOS/Linux on x86_64/aarch64/riscv64
 # OR: zig build release
 
+# Create release archives for all platforms
+make release-archive # Builds and packages binaries with documentation
+
 # Run tests
 make test            # Runs all unit tests
 # OR: zig build test
@@ -130,6 +133,30 @@ make check                       # Quick validation
 # Install to local bin (useful for testing)
 make install                     # Installs to ~/.local/bin/
 ```
+
+### Release Workflow
+```bash
+# Create release archives for all platforms
+make release-archive             # Cross-compiles and packages binaries
+
+# Complete release process (for GitHub Actions)
+make release-check               # Full validation before release
+
+# Manual release creation
+git tag v2.0.0-beta.1           # Create pre-release tag
+git push origin v2.0.0-beta.1   # Triggers Ship workflow
+
+git tag v2.0.0                  # Create stable release tag
+git push origin v2.0.0          # Triggers Ship workflow
+```
+
+**Release Automation**: The `.github/workflows/ship.yml` workflow automatically:
+- Detects first release vs subsequent releases
+- Builds cross-platform binaries for all 7 supported platforms
+- Creates platform-specific archives (tar.gz for Unix, zip for Windows)
+- Generates SHA256 checksums for all release assets
+- Creates GitHub releases with rich documentation and installation guides
+- Handles pre-release vs stable release detection from tag format
 
 ### Supported Zig Versions
 Current versions defined in `src/config.zig`:

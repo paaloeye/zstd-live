@@ -3,7 +3,9 @@
 > A modern Zig-native tool for generating live documentation from Zig standard library
 
 [![CI](https://github.com/paaloeye/zstd-live/workflows/CI/badge.svg)](https://github.com/paaloeye/zstd-live/actions)
+[![Ship](https://github.com/paaloeye/zstd-live/workflows/Ship/badge.svg)](https://github.com/paaloeye/zstd-live/actions)
 [![Deploy](https://github.com/paaloeye/zstd-live/workflows/Deploy%20to%20Cloudflare%20Pages/badge.svg)](https://github.com/paaloeye/zstd-live/actions)
+[![Release](https://img.shields.io/github/v/release/paaloeye/zstd-live?include_prereleases)](https://github.com/paaloeye/zstd-live/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENCE)
 
 **Live Documentation**: [zstd-live.pages.dev](https://zstd-live.pages.dev)
@@ -17,11 +19,22 @@ left and syntax-highlighted source code on the right.
 ### Key Features
 
 - **Multi-version support**: Generate docs for multiple Zig versions (0.15.0-master, 0.14.1, 0.13.0, 0.12.0, 0.11.0)
-- **Native Zig implementation**: Fast and reliable
+- **Native Zig implementation**: Fast and reliable, built with Zig 0.14.1
+- **Cross-platform binaries**: Pre-built binaries for 7 platforms (macOS, Linux, Windows on multiple architectures)
 - **Modern deployment**: Automatically deployed to Cloudflare Pages
 - **Interactive navigation**: Convert `@import()` statements to clickable links
 - **Progressive enhancement**: JavaScript-powered search and navigation
 - **Mobile-friendly**: Responsive design for all devices
+- **Automated releases**: Professional release workflow with checksums and comprehensive documentation
+
+### What's New in v2.0.0
+
+- 🚀 **Enhanced Release Pipeline**: Automated cross-platform builds with GitHub Actions
+- 📦 **Professional Packaging**: Release archives include documentation and proper directory structure
+- 🔐 **Security**: SHA256 checksums for all release assets
+- 📋 **Rich Release Notes**: Automated changelog generation with installation guides
+- 🏗️ **Native Build System**: Pure Zig implementation with no external dependencies
+- ⚡ **Performance**: Optimised cross-compilation for all supported platforms
 
 ## Quick Start
 
@@ -32,30 +45,34 @@ left and syntax-highlighted source code on the right.
 Download the latest release for your platform from [GitHub Releases](https://github.com/paaloeye/zstd-live/releases):
 
 **Supported Platforms:**
-- macOS (Intel): `zstd-live-macos-x86_64`
-- macOS (Apple Silicon): `zstd-live-macos-aarch64`
-- Linux (Intel): `zstd-live-linux-x86_64`
-- Linux (ARM64): `zstd-live-linux-aarch64`
-- Linux (RISC-V): `zstd-live-linux-riscv64`
-- Windows (Intel): `zstd-live-windows-x86_64.exe`
-- Windows (ARM64): `zstd-live-windows-aarch64.exe`
+- macOS (Intel): `zstd-live-macos-x86_64.tar.gz`
+- macOS (Apple Silicon): `zstd-live-macos-aarch64.tar.gz`
+- Linux (Intel): `zstd-live-linux-x86_64.tar.gz`
+- Linux (ARM64): `zstd-live-linux-aarch64.tar.gz`
+- Linux (RISC-V): `zstd-live-linux-riscv64.tar.gz`
+- Windows (Intel): `zstd-live-windows-x86_64.exe.zip`
+- Windows (ARM64): `zstd-live-windows-aarch64.exe.zip`
 
 ```bash
 # Linux x86_64
 curl -L https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-linux-x86_64.tar.gz | tar xz
-sudo mv zstd-live-linux-x86_64 /usr/local/bin/zstd-live
+sudo mv zstd-live-linux-x86_64/zstd-live-linux-x86_64 /usr/local/bin/zstd-live
 
 # macOS Apple Silicon
 curl -L https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-macos-aarch64.tar.gz | tar xz
-sudo mv zstd-live-macos-aarch64 /usr/local/bin/zstd-live
+sudo mv zstd-live-macos-aarch64/zstd-live-macos-aarch64 /usr/local/bin/zstd-live
+
+# macOS Intel
+curl -L https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-macos-x86_64.tar.gz | tar xz
+sudo mv zstd-live-macos-x86_64/zstd-live-macos-x86_64 /usr/local/bin/zstd-live
 
 # Windows PowerShell
-Invoke-WebRequest -Uri "https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-windows-x86_64.zip" -OutFile "zstd-live.zip"
+Invoke-WebRequest -Uri "https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-windows-x86_64.exe.zip" -OutFile "zstd-live.zip"
 Expand-Archive -Path "zstd-live.zip" -DestinationPath "."
-# Add to PATH or move to desired location
+# Add to PATH: $env:PATH += ";$(Get-Location)\zstd-live-windows-x86_64.exe"
 
-# macOS with Homebrew (coming soon)
-brew install paaloeye/tap/zstd-live
+# Verify installation
+zstd-live version
 ```
 
 #### Build from Source
@@ -99,6 +116,9 @@ make build
 # Build release binaries for all supported platforms
 make release
 
+# Create release archives for all platforms
+make release-archive
+
 # Run tests
 make test
 
@@ -113,6 +133,9 @@ make serve
 
 # Full development setup
 make dev
+
+# Complete release validation
+make release-check
 ```
 
 ### Project Structure
@@ -129,8 +152,8 @@ src/
 
 .github/workflows/        # CI/CD pipelines
 ├── ci.yml               # Test and build
-├── deploy.yml           # Cloudflare deployment
-└── release.yml          # Release automation
+├── ship.yml             # Release automation
+└── deploy.yml           # Cloudflare deployment
 
 assets/                  # Static assets
 ├── styles.css           # Enhanced styling
@@ -204,6 +227,26 @@ We welcome contributions! Please see our contributing guidelines:
 - Ensure all tests pass before submitting PR
 - Update documentation for new features
 - Follow Zig formatting standards
+
+### Release Process
+
+Releases are automated via the Ship workflow:
+
+```bash
+# Create pre-release
+git tag v2.1.0-beta.1
+git push origin v2.1.0-beta.1
+
+# Create stable release
+git tag v2.1.0
+git push origin v2.1.0
+```
+
+The workflow automatically:
+- Builds cross-platform binaries for all 7 supported platforms
+- Creates release archives with documentation
+- Generates checksums and rich release notes
+- Publishes to GitHub Releases with installation guides
 
 ## Architecture
 
