@@ -106,7 +106,7 @@ We aim to respond to security reports within:
 For security-related inquiries:
 
 - Use GitHub Security Advisories on this repository
-- Check repository README for current maintainer contact information
+- Check repository [README.md](./README.md) for current maintainer contact information
 - Look for security contact information in repository settings
 
 ## Attribution
