@@ -163,14 +163,19 @@ git push origin v2.0.0          # Triggers Ship workflow
 ```
 
 **Release Automation**: The `.github/workflows/ship.yml` workflow automatically:
+- **Shell Compatibility**: Uses POSIX-compliant syntax to avoid `/bin/sh: [[: not found` errors
 - **First Release Detection**: Detects if this is the first release and formats accordingly
 - **Cross-Platform Builds**: Builds binaries for all 7 supported platforms (macOS, Linux, Windows on multiple architectures)
 - **Professional Packaging**: Creates platform-specific archives with proper directory structure and documentation
-- **Security**: Generates SHA256 checksums for all release assets
-- **Rich Release Notes**: Creates comprehensive release notes with:
-  - Automated changelog generation from git commits
-  - Build information (Zig version, date, commit)
-- **Release Classification**: Automatically detects pre-release vs stable from tag format
+- **Security**: Generates SHA256 checksums for all release assets with verification instructions
+- **Comprehensive Release Notes**: Creates professional release notes with:
+  - **Supported Platforms**: Table showing all 7 platforms with binary names
+  - **Installation Instructions**: Step-by-step guides for macOS, Linux, and Windows
+  - **Quick Start**: Common usage examples with code blocks
+  - **Security Section**: SHA256 checksum verification instructions
+  - **Automated Changelog**: Git commit history in chronological order
+  - **Build Information**: Zig version, build date, commit, and optimisation level
+- **Release Classification**: Automatically detects pre-release vs stable from tag format using POSIX case statements
 - **Archive Structure**: Each archive contains binary, README.md, and LICENCE files
 - **Quality Assurance**: Runs format checks and tests before release
 

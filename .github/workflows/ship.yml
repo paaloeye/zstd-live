@@ -29,11 +29,10 @@ jobs:
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          if [[ $VERSION == *"-"* ]]; then
-            echo "prerelease=true" >> $GITHUB_OUTPUT
-          else
-            echo "prerelease=false" >> $GITHUB_OUTPUT
-          fi
+          case "$VERSION" in
+            *-*) echo "prerelease=true" >> $GITHUB_OUTPUT ;;
+            *) echo "prerelease=false" >> $GITHUB_OUTPUT ;;
+          esac
 
       - name: Run format check
         run: make check-fmt
@@ -76,8 +75,7 @@ jobs:
           else
             echo "### What's Changed" >> release_notes.md
             echo "" >> release_notes.md
-            # AI-TODO: log messages have to in reversed order
-            git log --pretty=format:"- %s" $PREV_TAG..HEAD >> release_notes.md
+            git log --pretty=format:"- %s" --reverse $PREV_TAG..HEAD >> release_notes.md
             echo "" >> release_notes.md
             echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/$PREV_TAG...v${{ steps.version.outputs.version }}" >> release_notes.md
           fi
@@ -89,6 +87,7 @@ jobs:
           echo "- **Zig Version:** 0.14.1" >> release_notes.md
           echo "- **Build Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> release_notes.md
           echo "- **Commit:** \`$(git rev-parse --short HEAD)\`" >> release_notes.md
+          echo "- **Build Optimisation:** ReleaseFast" >> release_notes.md
           echo "" >> release_notes.md
 
           echo "Generated release notes:"
