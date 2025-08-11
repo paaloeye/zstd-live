@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## IMPORTANT
 
 - ALWAYS read [GOTCHA.md](./GOTCHA.md) before making changes - Contains critical pitfalls and solutions
-- PREFER British English over American English spelling and grammar
+- PREFER British English over American English spelling and grammar except in **inline code** sections
 - Files and Directories MUST NOT have **dashes** in names/paths (Use **underscore** instead)
 - NEVER use Git LFS
 - ALWAYS run `make format` before `git commit` (uses `zig build fmt`)

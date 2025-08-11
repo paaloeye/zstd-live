@@ -211,7 +211,7 @@ When reporting bugs, please include:
 2. **Bug Description**
    - Clear description of the issue
    - Steps to reproduce
-   - Expected vs actual behavior
+   - Expected vs actual behaviour
 
 3. **Additional Context**
    - Error messages or logs
@@ -239,7 +239,7 @@ For security vulnerabilities, please follow responsible disclosure:
 
 ## 📄 License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing, you agree that your contributions will be licenced under the MIT Licence.
 
 ## 🙋 Getting Help
 
@@ -250,7 +250,7 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ## 🎉 Recognition
 
-Contributors are recognized in several ways:
+Contributors are recognised in several ways:
 
 - Listed in release notes for significant contributions
 - GitHub contributor statistics
