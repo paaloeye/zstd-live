@@ -13,6 +13,10 @@ help: ## Show this help message
 	@echo 'Targets:'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
+build: ## Build the application
+	@echo "Building $(BINARY_NAME)..."
+	@zig build
+
 release: ## Build release binaries for all supported platforms
 	@echo "Building release binaries for all supported platforms..."
 	@zig build release
@@ -101,7 +105,8 @@ release-archive: release ## Create release archives for all platforms
 					mkdir -p ".release/$$binary_name"; \
 					cp "$$binary" ".release/$$binary_name/$$binary_name"; \
 					cp README.md LICENCE ".release/$$binary_name/"; \
-					(cd .release && zip -r "$$binary_name.zip" "$$binary_name"); \
+					zip_name=$$(echo "$$binary_name" | sed 's/\.exe$$//'); \
+					(cd .release && zip -r "$$zip_name.zip" "$$binary_name"); \
 					rm -rf ".release/$$binary_name"; \
 					;; \
 				*) \
