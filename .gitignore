@@ -36,6 +36,9 @@ output/
 # AI
 .claude
 
+# Require `git add -f` to confirm changes
+GOTCHA.md
+
 # Cache and development files
 .tmp
 .output
@@ -47,3 +50,4 @@ output/
 .backup
 .release
 vendor
+contrib

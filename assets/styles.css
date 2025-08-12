@@ -211,6 +211,182 @@ a:hover {
     }
 }
 
+/* Tree Sitter-compatible syntax highlighting */
+/* Based on contrib/grammar/zig/highlights.scm patterns */
+
+/* Variables and identifiers */
+.variable {
+    color: var(--text-code);
+}
+
+.variable-parameter {
+    color: #ff9500;
+    font-style: italic;
+}
+
+.variable-builtin {
+    color: #0080ff;
+    font-weight: 500;
+}
+
+.variable-member {
+    color: #0080ff;
+}
+
+/* Types */
+.type {
+    color: #5ac8fa;
+    font-weight: 500;
+}
+
+.type-builtin {
+    color: #5ac8fa;
+    font-weight: bold;
+}
+
+/* Constants */
+.constant {
+    color: #ff9f40;
+    font-weight: 500;
+}
+
+.constant-builtin {
+    color: #ff9f40;
+    font-weight: bold;
+}
+
+.constant-character {
+    color: #d9c97c;
+}
+
+.constant-escape {
+    color: #ff8080;
+    font-weight: bold;
+}
+
+.number-integer {
+    color: #d9c97c;
+}
+
+.number-float {
+    color: #d9c97c;
+}
+
+.boolean {
+    color: #ff9f40;
+    font-weight: bold;
+}
+
+/* Functions */
+.function {
+    color: #78c2b3;
+}
+
+.function-builtin {
+    color: #ff8080;
+    font-weight: bold;
+}
+
+.function-method {
+    color: #78c2b3;
+    font-style: italic;
+}
+
+/* Keywords */
+.keyword {
+    color: #ff7ab2;
+    font-weight: bold;
+}
+
+.keyword-function {
+    color: #ff7ab2;
+    font-weight: bold;
+}
+
+.keyword-storage-type {
+    color: #ff7ab2;
+    font-weight: bold;
+}
+
+.keyword-storage-modifier {
+    color: #ff7ab2;
+}
+
+.keyword-operator {
+    color: #ff7ab2;
+    font-weight: bold;
+}
+
+.keyword-control-return {
+    color: #ff7ab2;
+    font-weight: bold;
+}
+
+.keyword-control-conditional {
+    color: #ff7ab2;
+    font-weight: bold;
+}
+
+.keyword-control-repeat {
+    color: #ff7ab2;
+    font-weight: bold;
+}
+
+.keyword-control-import {
+    color: #ff7ab2;
+    font-weight: bold;
+}
+
+.keyword-control-exception {
+    color: #ff7ab2;
+    font-weight: bold;
+}
+
+/* Operators and punctuation */
+.operator {
+    color: var(--text-code);
+    font-weight: bold;
+}
+
+.punctuation-bracket {
+    color: #a0a0a0;
+}
+
+.punctuation-delimiter {
+    color: #a0a0a0;
+}
+
+/* Literals */
+.string {
+    color: #fc6a5d;
+}
+
+.character {
+    color: #fc6a5d;
+}
+
+.number {
+    color: #d9c97c;
+}
+
+/* Comments */
+.comment {
+    color: #6b7280;
+    font-style: italic;
+}
+
+.comment-doc {
+    color: #8b9dc3;
+    font-style: italic;
+    font-weight: 500;
+}
+
+/* Labels */
+.label {
+    color: #ff9f40;
+    font-weight: bold;
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
     :root {
@@ -226,5 +402,126 @@ a:hover {
 
     code {
         color: #e6e6e6;
+    }
+
+    /* Dark mode syntax highlighting adjustments */
+    .variable-parameter {
+        color: #ffb366;
+    }
+
+    .variable-builtin {
+        color: #66b3ff;
+    }
+
+    .variable-member {
+        color: #66b3ff;
+    }
+
+    .type {
+        color: #7dd3fc;
+    }
+
+    .type-builtin {
+        color: #7dd3fc;
+    }
+
+    .constant {
+        color: #ffcc80;
+    }
+
+    .constant-builtin {
+        color: #ffcc80;
+    }
+
+    .constant-character {
+        color: #fff2cc;
+    }
+
+    .constant-escape {
+        color: #ffb3b3;
+    }
+
+    .number-integer {
+        color: #fff2cc;
+    }
+
+    .number-float {
+        color: #fff2cc;
+    }
+
+    .boolean {
+        color: #ffcc80;
+    }
+
+    .function {
+        color: #a3d9ce;
+    }
+
+    .function-builtin {
+        color: #ffb3b3;
+    }
+
+    .function-method {
+        color: #a3d9ce;
+    }
+
+    .keyword {
+        color: #ffb3d9;
+    }
+
+    .keyword-function {
+        color: #ffb3d9;
+    }
+
+    .keyword-storage-type {
+        color: #ffb3d9;
+    }
+
+    .keyword-storage-modifier {
+        color: #ffb3d9;
+    }
+
+    .keyword-operator {
+        color: #ffb3d9;
+    }
+
+    .keyword-control-return {
+        color: #ffb3d9;
+    }
+
+    .keyword-control-conditional {
+        color: #ffb3d9;
+    }
+
+    .keyword-control-repeat {
+        color: #ffb3d9;
+    }
+
+    .keyword-control-import {
+        color: #ffb3d9;
+    }
+
+    .keyword-control-exception {
+        color: #ffb3d9;
+    }
+
+    .string {
+        color: #ff9999;
+    }
+
+    .character {
+        color: #ff9999;
+    }
+
+    .comment {
+        color: #9ca3af;
+    }
+
+    .comment-doc {
+        color: #b3c7f7;
+    }
+
+    .label {
+        color: #ffcc80;
     }
 }

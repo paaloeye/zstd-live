@@ -3,7 +3,8 @@ const config = @import("config.zig");
 const generator = @import("generator.zig");
 const version_manager = @import("version_manager.zig");
 
-// Log level info in release build
+// DEBUG: .debug adds chatty messages to ReleaseFast
+//
 pub const std_options: std.Options = .{
     .log_level = .info,
 };

@@ -72,10 +72,15 @@ pub const Generator = struct {
     }
 
     fn processAllZigFiles(self: *Generator, stdlib_path: []const u8, version_name: []const u8, output_dir: []const u8) !void {
+        std.log.info("Starting to process .zig files in: {s}", .{stdlib_path});
         try self.walkAndProcessDirectory(stdlib_path, "", stdlib_path, version_name, output_dir);
+        std.log.info("Finished processing .zig files for {s}", .{version_name});
     }
 
     fn walkAndProcessDirectory(self: *Generator, base_path: []const u8, rel_path: []const u8, stdlib_path: []const u8, version_name: []const u8, output_dir: []const u8) !void {
+        // Track directory processing
+        std.log.debug("[DIR] Processing directory: {s}", .{if (rel_path.len == 0) "root" else rel_path});
+
         const current_path = if (rel_path.len == 0)
             try self.allocator.dupe(u8, base_path)
         else
@@ -106,6 +111,7 @@ pub const Generator = struct {
             switch (entry.kind) {
                 .file => {
                     if (std.mem.endsWith(u8, entry.name, ".zig")) {
+                        std.log.debug("[FILE] Found .zig file: {s}", .{entry_rel_path});
                         try self.processZigFile(full_path, entry_rel_path, version_name, output_dir);
                     }
                 },
@@ -118,6 +124,12 @@ pub const Generator = struct {
     }
 
     fn processZigFile(self: *Generator, file_path: []const u8, rel_path: []const u8, version_name: []const u8, output_dir: []const u8) !void {
+        // Debug: Track memory before processing file
+        const debug_start_mem = std.debug.runtime_safety;
+        if (debug_start_mem) {
+            std.log.debug("[MEM] Processing file: {s}", .{rel_path});
+        }
+
         // Read file content
         const content = self.file_utils.readFile(file_path) catch |err| {
             std.log.warn("Failed to read {s}: {}", .{ file_path, err });
@@ -125,13 +137,23 @@ pub const Generator = struct {
         };
         defer self.allocator.free(content);
 
+        if (debug_start_mem) {
+            std.log.debug("[MEM] File content loaded: {d} bytes", .{content.len});
+        }
+
         // Parse the file
         var zig_parser = parser.ZigParser.init(self.allocator);
+        defer zig_parser.deinit(); // POTENTIAL MEMORY LEAK FIX!
+
         var parse_result = zig_parser.parseFile(content) catch |err| {
             std.log.warn("Failed to parse {s}: {}", .{ file_path, err });
             return;
         };
         defer parse_result.deinit();
+
+        if (debug_start_mem) {
+            std.log.debug("[MEM] File parsed - declarations: {d}, comments: {d}", .{ parse_result.declarations.items.len, parse_result.doc_comments.items.len });
+        }
 
         // Split content into lines for template
         var lines = std.ArrayList([]const u8).init(self.allocator);
@@ -165,8 +187,16 @@ pub const Generator = struct {
         };
 
         // Generate HTML
+        if (debug_start_mem) {
+            std.log.debug("[MEM] Starting HTML generation for {s}", .{rel_path});
+        }
+
         const html = try self.template.renderPage(context);
         defer self.allocator.free(html);
+
+        if (debug_start_mem) {
+            std.log.debug("[MEM] HTML generated: {d} bytes", .{html.len});
+        }
 
         // Write output file
         const output_filename = try std.fmt.allocPrint(self.allocator, "{s}.html", .{rel_path});
@@ -176,6 +206,10 @@ pub const Generator = struct {
         defer self.allocator.free(output_path);
 
         try self.file_utils.writeFile(output_path, html);
+
+        if (debug_start_mem) {
+            std.log.debug("[MEM] File written successfully: {s}", .{output_path});
+        }
 
         if (std.mem.eql(u8, std.fs.path.basename(rel_path), "std.zig")) {
             std.log.info("  Generated {s}/std.zig.html", .{version_name});

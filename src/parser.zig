@@ -51,6 +51,12 @@ pub const ZigParser = struct {
         return ZigParser{ .allocator = allocator };
     }
 
+    pub fn deinit(self: *ZigParser) void {
+        // ZigParser doesn't allocate internal memory directly, but this
+        // method exists for consistency and future-proofing
+        _ = self;
+    }
+
     pub fn parseFile(self: *ZigParser, content: []const u8) !ParseResult {
         var result = ParseResult{
             .doc_comments = std.ArrayList(DocComment).init(self.allocator),

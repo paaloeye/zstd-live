@@ -45,29 +45,21 @@ left and syntax-highlighted source code on the right.
 Download the latest release for your platform from [GitHub Releases](https://github.com/paaloeye/zstd-live/releases):
 
 **Supported Platforms:**
-- macOS (Intel): `zstd-live-macos-x86_64.tar.gz`
-- macOS (Apple Silicon): `zstd-live-macos-aarch64.tar.gz`
-- Linux (Intel): `zstd-live-linux-x86_64.tar.gz`
-- Linux (ARM64): `zstd-live-linux-aarch64.tar.gz`
-- Linux (RISC-V): `zstd-live-linux-riscv64.tar.gz`
-- Windows (Intel): `zstd-live-windows-x86_64.exe.zip`
-- Windows (ARM64): `zstd-live-windows-aarch64.exe.zip`
+- macOS
+- Linux
+- Windows
 
 ```bash
-# Linux x86_64
+# Linux
 curl -L https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-linux-x86_64.tar.gz | tar xz
 sudo mv zstd-live-linux-x86_64/zstd-live-linux-x86_64 /usr/local/bin/zstd-live
 
-# macOS Apple Silicon
+# macOS
 curl -L https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-macos-aarch64.tar.gz | tar xz
 sudo mv zstd-live-macos-aarch64/zstd-live-macos-aarch64 /usr/local/bin/zstd-live
 
-# macOS Intel
-curl -L https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-macos-x86_64.tar.gz | tar xz
-sudo mv zstd-live-macos-x86_64/zstd-live-macos-x86_64 /usr/local/bin/zstd-live
-
 # Windows PowerShell
-Invoke-WebRequest -Uri "https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-windows-x86_64.exe.zip" -OutFile "zstd-live.zip"
+Invoke-WebRequest -Uri "https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-windows-x86_64.zip" -OutFile "zstd-live.zip"
 Expand-Archive -Path "zstd-live.zip" -DestinationPath "."
 # Add to PATH: $env:PATH += ";$(Get-Location)\zstd-live-windows-x86_64.exe"
 
@@ -277,6 +269,8 @@ This project is licensed under the MIT License - see the [LICENCE](./LICENCE) fi
 - Original [docco.coffee](https://web.archive.org/web/20120428101624/http://jashkenas.github.com/docco/) for the two-column layout inspiration
 - The Zig community for the amazing programming language and standard library
 - [ratfactor](https://ratfactor.com/) for the original zstd-browse implementation
+- [tree-sitter-zig](https://github.com/tree-sitter-grammars/tree-sitter-zig) grammar for syntax highlighting patterns (MIT License)
+- [tree-sitter](https://tree-sitter.github.io/tree-sitter/) project for the grammar framework
 
 ---
 
