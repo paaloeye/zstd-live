@@ -49,6 +49,7 @@ install: build ## Install the binary to local bin directory
 
 generate: build ## Generate documentation for all supported Zig versions
 	@echo "Generating documentation for all supported versions..."
+	@echo "Running: $(BINARY_NAME) generate --all-versions --output $(OUTPUT_DIR)"
 	@./$(ZIG_OUT)/bin/$(BINARY_NAME) generate --all-versions --output $(OUTPUT_DIR)
 	@echo "Documentation generated in $(OUTPUT_DIR)/"
 

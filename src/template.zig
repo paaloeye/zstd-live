@@ -198,17 +198,16 @@ pub const HtmlTemplate = struct {
         var decl_idx: usize = 0;
         var in_code_block = false;
 
-        // Create arena allocator for this file's syntax highlighting
-        std.log.debug("[TEMPLATE] Creating arena allocator for syntax highlighting", .{});
+        // Create arena allocator for syntax highlighting work
         var arena = std.heap.ArenaAllocator.init(self.allocator);
-        defer arena.deinit(); // Frees ALL syntax highlighting memory at once
+        defer arena.deinit();
+        const arena_allocator = arena.allocator();
 
-        // Create highlighter using arena allocator
-        std.log.debug("[TEMPLATE] Creating syntax highlighter", .{});
-        var highlighter = syntax_highlighter.SyntaxHighlighter.init(arena.allocator());
+        std.log.debug("[TEMPLATE] Created arena allocator for syntax highlighting", .{});
+
+        // Create syntax highlighter with arena allocator
+        var highlighter = syntax_highlighter.SyntaxHighlighter.init(arena_allocator);
         defer highlighter.deinit();
-
-        std.log.debug("[TEMPLATE] Starting line processing loop", .{});
 
         for (context.source_lines, 0..) |line, line_no| {
             if (line_no % 50 == 0) { // Log every 50 lines to avoid spam
@@ -240,11 +239,11 @@ pub const HtmlTemplate = struct {
                     const doc = context.doc_comments[doc_idx];
                     try writer.appendSlice("<p>");
 
-                    // Process inline code in documentation - USE ARENA ALLOCATOR!
-                    var temp_parser = parser.ZigParser.init(arena.allocator());
+                    // Process inline code in documentation
+                    var temp_parser = parser.ZigParser.init(self.allocator);
                     defer temp_parser.deinit();
                     const processed_doc = try temp_parser.processInlineCode(doc.content);
-                    // No defer needed - arena will free everything at once!
+                    defer self.allocator.free(processed_doc);
 
                     try writer.appendSlice(processed_doc);
                     try writer.appendSlice("</p>\n");
@@ -263,11 +262,11 @@ pub const HtmlTemplate = struct {
                     const doc = context.doc_comments[doc_idx];
                     try writer.appendSlice("<p>");
 
-                    // Process inline code in documentation - USE ARENA ALLOCATOR!
-                    var temp_parser = parser.ZigParser.init(arena.allocator());
+                    // Process inline code in documentation
+                    var temp_parser = parser.ZigParser.init(self.allocator);
                     defer temp_parser.deinit();
                     const processed_doc = try temp_parser.processInlineCode(doc.content);
-                    // No defer needed - arena will free everything at once!
+                    defer self.allocator.free(processed_doc);
 
                     try writer.appendSlice(processed_doc);
                     try writer.appendSlice("</p>\n");
@@ -284,7 +283,9 @@ pub const HtmlTemplate = struct {
             }
 
             const highlighted_line = try highlighter.highlightLine(line);
-            // No defer needed - arena will free everything at once!
+            // Arena will free this automatically - no manual free needed
+
+            std.log.debug("[TEMPLATE] Highlighted line {d}, generated {d} bytes", .{ line_no, highlighted_line.len });
 
             if (line_no % 100 == 0) {
                 std.log.debug("[TEMPLATE] Highlighted line {d} successfully", .{line_no});

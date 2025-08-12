@@ -320,6 +320,30 @@ src/
 └── config.zig           # Configuration and version definitions
 ```
 
+### Memory Management Strategy
+
+The application uses a **mixed memory allocation strategy** optimised for different usage patterns:
+
+#### **ArenaAllocator Usage**
+- **Syntax Highlighter**: Uses ArenaAllocator for efficient batch processing
+  - Creates many small HTML fragments and tokens per line
+  - All allocations have same lifetime (until end of processing function)
+  - Arena bulk-frees everything at once for optimal performance
+  - Configured in `template.zig:writeBody()` with arena allocator passed to syntax highlighter
+
+#### **General Purpose Allocator (GPA) Usage**
+- **Document Processing**: Uses regular allocator with explicit `defer free()`
+  - Few, immediate-use allocations per operation
+  - Manual memory management is simple and explicit
+  - Doesn't contribute to arena memory pressure
+  - Used for temporary parsing operations and small document processing
+
+#### **Memory Allocation Best Practices**
+- **Use ArenaAllocator when**: Many small allocations with same lifetime, batch processing
+- **Use GPA when**: Few allocations, immediate use-then-free pattern, long-lived data
+- **Mixed strategies are optimal**: Different parts of application have different memory patterns
+- **Profile and measure**: Choose allocation strategy based on actual usage patterns, not assumptions
+
 ### Core Components
 
 #### main.zig

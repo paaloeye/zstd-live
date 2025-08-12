@@ -119,7 +119,7 @@ pub const Token = struct {
     end: usize,
 };
 
-/// Tree Sitter-compatible syntax highlighter for Zig
+/// Tree Sitter-compatible syntax highlighter
 /// Uses the exact same classification patterns as contrib/grammar/zig/highlights.scm
 pub const SyntaxHighlighter = struct {
     allocator: std.mem.Allocator,
@@ -157,6 +157,8 @@ pub const SyntaxHighlighter = struct {
     const BUILTIN_TYPES = [_][]const u8{ "i8", "u8", "i16", "u16", "i32", "u32", "i64", "u64", "i128", "u128", "isize", "usize", "c_short", "c_ushort", "c_int", "c_uint", "c_long", "c_ulong", "c_longlong", "c_ulonglong", "c_longdouble", "c_void", "f16", "f32", "f64", "f80", "f128", "bool", "anyopaque", "void", "noreturn", "type", "anyerror", "comptime_int", "comptime_float", "anyframe" };
 
     pub fn init(allocator: std.mem.Allocator) SyntaxHighlighter {
+        std.log.debug("[SYNTAX] Initializing syntax highlighter", .{});
+
         return SyntaxHighlighter{
             .allocator = allocator,
             .token_buffer = std.ArrayList(Token).init(allocator),
@@ -164,28 +166,25 @@ pub const SyntaxHighlighter = struct {
     }
 
     pub fn deinit(self: *SyntaxHighlighter) void {
+        std.log.debug("[SYNTAX] Deinitializing syntax highlighter", .{});
         self.token_buffer.deinit();
     }
 
     pub fn highlightLine(self: *SyntaxHighlighter, line: []const u8) ![]u8 {
-        std.log.debug("[HIGHLIGHT] Starting highlightLine for: {s}", .{line[0..@min(line.len, 80)]});
+        std.log.debug("[SYNTAX] Processing line with {d} characters", .{line.len});
 
-        // Reuse the token buffer, just clear it
+        // Clear and reuse token buffer
         self.token_buffer.clearRetainingCapacity();
-        std.log.debug("[HIGHLIGHT] Token buffer cleared, starting tokenization", .{});
 
         try self.tokenizeLine(line, &self.token_buffer);
-        std.log.debug("[HIGHLIGHT] Tokenization complete, got {d} tokens", .{self.token_buffer.items.len});
 
+        std.log.debug("[SYNTAX] Tokenized line into {d} tokens", .{self.token_buffer.items.len});
+
+        // Use direct allocation for HTML generation
         var result = std.ArrayList(u8).init(self.allocator);
+        defer result.deinit();
 
-        std.log.debug("[HIGHLIGHT] Starting HTML generation for {d} tokens", .{self.token_buffer.items.len});
-
-        for (self.token_buffer.items, 0..) |token, token_idx| {
-            if (token_idx % 5 == 0) { // Log every 5 tokens to avoid spam
-                std.log.debug("[HIGHLIGHT] Processing token {d}/{d}: '{s}' -> {s}", .{ token_idx, self.token_buffer.items.len, token.text, token.highlight.toCssClass() });
-            }
-
+        for (self.token_buffer.items) |token| {
             const css_class = token.highlight.toCssClass();
 
             if (css_class.len > 0) {
@@ -199,20 +198,18 @@ pub const SyntaxHighlighter = struct {
             }
         }
 
-        std.log.debug("[HIGHLIGHT] HTML generation complete, result length: {d}", .{result.items.len});
-        return result.toOwnedSlice();
+        const html_result = try result.toOwnedSlice();
+
+        std.log.debug("[SYNTAX] Generated {d} bytes of HTML", .{html_result.len});
+
+        return html_result;
     }
 
     fn tokenizeLine(self: *SyntaxHighlighter, line: []const u8, tokens: *std.ArrayList(Token)) !void {
-        std.log.debug("[TOKENIZE] Starting tokenization of line length: {d}", .{line.len});
         var i: usize = 0;
 
         while (i < line.len) {
             const start = i;
-
-            if (i % 50 == 0) { // Log every 50 characters to reduce spam
-                std.log.debug("[TOKENIZE] Position {d}/{d}, char: '{c}'", .{ i, line.len, line[i] });
-            }
 
             // Skip whitespace (don't highlight)
             if (std.ascii.isWhitespace(line[i])) {
@@ -376,9 +373,8 @@ pub const SyntaxHighlighter = struct {
 
                 const word = line[start..i];
 
-                // CRITICAL BUG FIX: Prevent infinite loop on empty identifier
+                // Prevent infinite loop on empty identifier
                 if (word.len == 0) {
-                    std.log.debug("[TOKENIZE] EMPTY WORD BUG! Advancing manually", .{});
                     i = start + 1; // Force advance by 1 to break infinite loop
                     try tokens.append(Token{
                         .highlight = .text,
