@@ -3,7 +3,7 @@ const config = @import("config.zig");
 const generator = @import("generator.zig");
 const version_manager = @import("version_manager.zig");
 
-// Log level info in release build
+// NB: debug message are optmised out in compile time
 pub const std_options: std.Options = .{
     .log_level = .info,
 };

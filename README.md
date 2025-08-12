@@ -59,7 +59,7 @@ curl -L https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live
 sudo mv zstd-live-macos-aarch64/zstd-live-macos-aarch64 /usr/local/bin/zstd-live
 
 # Windows PowerShell
-Invoke-WebRequest -Uri "https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-windows-x86_64.exe.zip" -OutFile "zstd-live.zip"
+Invoke-WebRequest -Uri "https://github.com/paaloeye/zstd-live/releases/latest/download/zstd-live-windows-x86_64.zip" -OutFile "zstd-live.zip"
 Expand-Archive -Path "zstd-live.zip" -DestinationPath "."
 # Add to PATH: $env:PATH += ";$(Get-Location)\zstd-live-windows-x86_64.exe"
 
@@ -269,6 +269,8 @@ This project is licensed under the MIT License - see the [LICENCE](./LICENCE) fi
 - Original [docco.coffee](https://web.archive.org/web/20120428101624/http://jashkenas.github.com/docco/) for the two-column layout inspiration
 - The Zig community for the amazing programming language and standard library
 - [ratfactor](https://ratfactor.com/) for the original zstd-browse implementation
+- [tree-sitter-zig](https://github.com/tree-sitter-grammars/tree-sitter-zig) grammar for syntax highlighting patterns (MIT License)
+- [tree-sitter](https://tree-sitter.github.io/tree-sitter/) project for the grammar framework
 
 ---
 

@@ -1,5 +1,6 @@
 const std = @import("std");
 const parser = @import("parser.zig");
+const syntax_highlighter = @import("syntax_highlighter.zig");
 
 pub const ModuleInfo = struct {
     name: []const u8,
@@ -191,11 +192,29 @@ pub const HtmlTemplate = struct {
     }
 
     fn writeBody(self: *HtmlTemplate, writer: *std.ArrayList(u8), context: TemplateContext) !void {
+        std.log.debug("[TEMPLATE] Starting writeBody for {s} - {d} lines", .{ context.relative_path, context.source_lines.len });
+
         var doc_idx: usize = 0;
         var decl_idx: usize = 0;
         var in_code_block = false;
 
+        // Create arena allocator for this file's syntax highlighting
+        std.log.debug("[TEMPLATE] Creating arena allocator for syntax highlighting", .{});
+        var arena = std.heap.ArenaAllocator.init(self.allocator);
+        defer arena.deinit(); // Frees ALL syntax highlighting memory at once
+
+        // Create highlighter using arena allocator
+        std.log.debug("[TEMPLATE] Creating syntax highlighter", .{});
+        var highlighter = syntax_highlighter.SyntaxHighlighter.init(arena.allocator());
+        defer highlighter.deinit();
+
+        std.log.debug("[TEMPLATE] Starting line processing loop", .{});
+
         for (context.source_lines, 0..) |line, line_no| {
+            if (line_no % 50 == 0) { // Log every 50 lines to avoid spam
+                std.log.debug("[TEMPLATE] Processing line {d}/{d}", .{ line_no, context.source_lines.len });
+            }
+
             // Check if this line corresponds to a declaration
             var matching_decl: ?parser.Declaration = null;
 
@@ -221,10 +240,11 @@ pub const HtmlTemplate = struct {
                     const doc = context.doc_comments[doc_idx];
                     try writer.appendSlice("<p>");
 
-                    // Process inline code in documentation
-                    var temp_parser = parser.ZigParser.init(self.allocator);
+                    // Process inline code in documentation - USE ARENA ALLOCATOR!
+                    var temp_parser = parser.ZigParser.init(arena.allocator());
+                    defer temp_parser.deinit();
                     const processed_doc = try temp_parser.processInlineCode(doc.content);
-                    defer self.allocator.free(processed_doc);
+                    // No defer needed - arena will free everything at once!
 
                     try writer.appendSlice(processed_doc);
                     try writer.appendSlice("</p>\n");
@@ -243,9 +263,11 @@ pub const HtmlTemplate = struct {
                     const doc = context.doc_comments[doc_idx];
                     try writer.appendSlice("<p>");
 
-                    var temp_parser = parser.ZigParser.init(self.allocator);
+                    // Process inline code in documentation - USE ARENA ALLOCATOR!
+                    var temp_parser = parser.ZigParser.init(arena.allocator());
+                    defer temp_parser.deinit();
                     const processed_doc = try temp_parser.processInlineCode(doc.content);
-                    defer self.allocator.free(processed_doc);
+                    // No defer needed - arena will free everything at once!
 
                     try writer.appendSlice(processed_doc);
                     try writer.appendSlice("</p>\n");
@@ -256,11 +278,20 @@ pub const HtmlTemplate = struct {
                 try writer.appendSlice("<td class=\"code\"><pre>\n");
             }
 
-            // Write the source line with HTML escaping
-            try self.writeEscapedHtml(writer, line);
-            try writer.appendSlice("\n");
+            // Write the source line with syntax highlighting
+            if (line_no % 100 == 0) { // Debug every 100 lines
+                std.log.debug("[TEMPLATE] About to highlight line {d}: {s}", .{ line_no, line[0..@min(line.len, 50)] });
+            }
 
-            _ = line_no; // Suppress unused variable warning
+            const highlighted_line = try highlighter.highlightLine(line);
+            // No defer needed - arena will free everything at once!
+
+            if (line_no % 100 == 0) {
+                std.log.debug("[TEMPLATE] Highlighted line {d} successfully", .{line_no});
+            }
+
+            try writer.appendSlice(highlighted_line);
+            try writer.appendSlice("\n");
         }
 
         // Close final code block

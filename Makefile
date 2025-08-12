@@ -103,7 +103,7 @@ release-archive: release ## Create release archives for all platforms
 				*windows*) \
 					echo "Creating ZIP archive for $$binary_name"; \
 					mkdir -p ".release/$$binary_name"; \
-					cp "$$binary" ".release/$$binary_name/$$binary_name"; \
+					cp "$$binary" ".release/$$(echo "$$binary_name" | sed 's/\.exe$$//')/$$binary_name"; \
 					cp README.md LICENCE ".release/$$binary_name/"; \
 					zip_name=$$(echo "$$binary_name" | sed 's/\.exe$$//'); \
 					(cd .release && zip -r "$$zip_name.zip" "$$binary_name"); \
