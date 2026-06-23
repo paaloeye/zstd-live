@@ -23,7 +23,7 @@ jobs:
           version: '0.14.1'
 
       - name: Cache Zig stdlib sources
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.local/share/zstd-live/sources
           key: zig-stdlib-${{ hashFiles('src/config.zig') }}
